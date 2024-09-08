@@ -1,6 +1,4 @@
 import Layout from '../components/layout';
-import utilStyles from '../styles/utils.module.css';
-
 import Image from 'next/image';
 import handsTogetherPic from '../public/images/handsTogether.jpg';
 import heroPic from '../public/images/hero.jpg';

@@ -1,0 +1,37 @@
+.footer {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 150px;
+    text-align: center;
+    padding-bottom: 10px;
+}
+.socialIcons {
+    margin-top: 5px;
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+}
+.socialIcons img {
+    width: 20px;
+    cursor: pointer;
+}
+.vl {
+    border-left: 2px solid #333;
+    height: auto;
+    top: 0;
+    min-height: 100%;
+}
+.contacts {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+/* media query for hamburger */
+@media (max-width: 800px) {
+    .footer {
+      flex-direction: column;
+    }
+  }

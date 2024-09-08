@@ -90,16 +90,16 @@
         0,
         0,
         0.5
-        ); /* Adjust opacity for dimming effect */
+        );
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.35s ease;
-        z-index: 9; /* Make sure overlay is behind the sidebar and hamburger */
+        z-index: 9;
     }
 
     .overlay.active {
         opacity: 1;
-        pointer-events: all; /* Allows clicking on overlay to close the menu */
+        pointer-events: all;
     }
 }
 
