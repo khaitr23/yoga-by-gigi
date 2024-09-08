@@ -3,6 +3,9 @@ import Image from 'next/image';
 import styles from './layout.module.css';
 import utilStyles from '../styles/utils.module.css';
 import Link from 'next/link';
+import logoPic from '../public/images/logo.png';
+import instaIcon from '../public/images/icon-instagram.svg';
+import fbIcon from '../public/images/icon-facebook.svg';
 
 export default function Layout({children}:{children: React.ReactNode}) {
   return (
@@ -22,7 +25,7 @@ export default function Layout({children}:{children: React.ReactNode}) {
         <link rel="stylesheet" href="style.css" />
       </Head>
       <header className="headerSection">
-      <a href="#"><img src="./img/logo.png" alt="" className="logo" /></a>
+      <a href="#"><Image src={logoPic} alt="" className="logo" layout='intrinsic'/></a>
       <ul className="nav-menu">
         <li className="nav-item">
           <a href="#" className="nav-link">Retreats</a>
@@ -51,8 +54,8 @@ export default function Layout({children}:{children: React.ReactNode}) {
       <div>
         <p>Connect with me on</p>
         <div className="social-icons">
-          <img src="./img/icon-facebook.svg" />
-          <img src="./img/icon-instagram.svg" />
+          <Image src={fbIcon} alt=""/>
+          <Image src={instaIcon} alt=""/>
         </div>
       </div>
       <div className="vl"></div>

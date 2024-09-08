@@ -1,7 +1,14 @@
 import Head from 'next/head';
 import Layout from '../components/layout';
 import utilStyles from '../styles/utils.module.css';
+
 import Image from 'next/image';
+import handsTogetherPic from '../public/images/handsTogether.jpg';
+import heroPic from '../public/images/hero.jpg';
+import greenPosePic from '../public/images/greenPose.jpg';
+import retreatPic from '../public/images/retreat.jpg';
+import teachersPic from '../public/images/teachers.jpg';
+import waterfrontPic from '../public/images/waterfront.jpg'
 
 export default function Home() {
   return (
@@ -20,17 +27,14 @@ export default function Home() {
           <a href="#" className="button">Book an Appointment</a>
         </div>
       </div>
-      <div><img src="./img/hero.jpg" alt="" /></div>
+      <div><Image src={heroPic} alt="" layout="intrinsic" unoptimized/></div>
     </div>
 
     <div className="overlay"></div>
 
     {/* ABOUT GIGI */}
     <div className="hero section column aboutGigi">
-      <div className='image-container'>
-        <Image src="/images/handsTogether.jpg" alt="" layout="fill" objectFit="cover"/>
-        {/* <img src="./img/handsTogether.jpg" alt="" /> */}
-      </div>
+      <div className='image-container'><Image src={handsTogetherPic} alt="" layout="intrinsic" unoptimized/></div>
       <div>
         <h2>Meet the Soul Behind the Movement</h2>
         <br />
@@ -67,10 +71,10 @@ export default function Home() {
           session is crafted to support your physical and emotional well-being.
         </p>
       </div>
-      <div><img src="./img/greenPose.jpg" alt="" /></div>
+      <div> <Image src={greenPosePic} alt="" layout="intrinsic" unoptimized/></div>
     </div>
     <div className="section hero column">
-      <div><img src="./img/retreat.jpg" alt="" /></div>
+      <div><Image src={retreatPic} alt="" layout="intrinsic" unoptimized/></div>
       <div>
         <h3>Yoga Retreats</h3>
         <p>
@@ -90,10 +94,10 @@ export default function Home() {
           designed to empower you with practical tools for better health.
         </p>
       </div>
-      <div><img src="./img/waterfront.jpg" alt="" /></div>
+      <div><Image src={waterfrontPic} alt="" layout="intrinsic" unoptimized/></div>
     </div>
     <div className="section hero column">
-      <div><img src="./img/teachers.jpg" alt="" /></div>
+      <div><Image src={teachersPic} alt="" layout="intrinsic" unoptimized/></div>
       <div>
         <h3>Corporate Wellness Programs</h3>
         <p>
