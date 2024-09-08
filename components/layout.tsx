@@ -1,9 +1,9 @@
 import Head from 'next/head';
+import Header from './Header'
 import Image from 'next/image';
 import styles from './layout.module.css';
 import utilStyles from '../styles/utils.module.css';
 import Link from 'next/link';
-import logoPic from '../public/images/logo.png';
 import instaIcon from '../public/images/icon-instagram.svg';
 import fbIcon from '../public/images/icon-facebook.svg';
 
@@ -21,34 +21,8 @@ export default function Layout({children}:{children: React.ReactNode}) {
           href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap"
           rel="stylesheet"
         />
-
-        <link rel="stylesheet" href="style.css" />
       </Head>
-      <header className="headerSection">
-      <a href="#"><Image src={logoPic} alt="" className="logo" layout='intrinsic'/></a>
-      <ul className="nav-menu">
-        <li className="nav-item">
-          <a href="#" className="nav-link">Retreats</a>
-        </li>
-        <li className="nav-item">
-          <a href="#" className="nav-link">Blog</a>
-        </li>
-        <li className="nav-item">
-          <a href="#" className="nav-link">Booking</a>
-        </li>
-        <li className="nav-item">
-          <a href="#" className="nav-link">Shop</a>
-        </li>
-        <li className="nav-item">
-          <a href="#" className="nav-link">Contact</a>
-        </li>
-      </ul>
-      <div className="hamburger">
-        <span className="bar"></span>
-        <span className="bar"></span>
-        <span className="bar"></span>
-      </div>
-    </header>
+      <Header/>
     {children}
     <footer className="footer column section">
       <div>

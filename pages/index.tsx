@@ -29,9 +29,6 @@ export default function Home() {
       </div>
       <div><Image src={heroPic} alt="" layout="intrinsic" unoptimized/></div>
     </div>
-
-    <div className="overlay"></div>
-
     {/* ABOUT GIGI */}
     <div className="hero section column aboutGigi">
       <div className='image-container'><Image src={handsTogetherPic} alt="" layout="intrinsic" unoptimized/></div>
