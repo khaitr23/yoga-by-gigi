@@ -2,6 +2,8 @@
 import React, {useState} from 'react';
 import logoPic from '../public/images/logo.png';
 import Image from 'next/image';
+import styles from './Header.module.css';
+
 
 export default function Header(){
     const[isMenuOpen,setIsMenuOpen] = useState(false);
@@ -11,31 +13,31 @@ export default function Header(){
     };
 
     return(
-        <header className="headerSection">
-        <a href="#"><Image src={logoPic} alt="" className="logo" layout='intrinsic'/></a>
-        <ul className={`nav-menu ${isMenuOpen ? 'active' : ''}`} onClick={toggleMenu}>
-          <li className="nav-item">
-            <a href="#" className="nav-link">Retreats</a>
+        <header className={styles.headerSection}>
+        <a href="#"><Image src={logoPic} alt="" className={styles.logo} layout='intrinsic'/></a>
+        <ul className={`${styles.navMenu} ${isMenuOpen ? styles.active : ''}`} onClick={toggleMenu}>
+          <li className={styles.navItem}>
+            <a href="#" className={styles.navLink}>Retreats</a>
           </li>
-          <li className="nav-item">
-            <a href="#" className="nav-link">Blog</a>
+          <li className={styles.navItem}>
+            <a href="#" className={styles.navLink}>Blog</a>
           </li>
-          <li className="nav-item">
-            <a href="#" className="nav-link">Booking</a>
+          <li className={styles.navItem}>
+            <a href="#" className={styles.navLink}>Booking</a>
           </li>
-          <li className="nav-item">
-            <a href="#" className="nav-link">Shop</a>
+          <li className={styles.navItem}>
+            <a href="#" className={styles.navLink}>Shop</a>
           </li>
-          <li className="nav-item">
-            <a href="#" className="nav-link">Contact</a>
+          <li className={styles.navItem}>
+            <a href="#" className={styles.navLink}>Contact</a>
           </li>
         </ul>
-        <div className={`hamburger ${isMenuOpen ? 'active' : ''}`} onClick={toggleMenu}>
-          <span className="bar"></span>
-          <span className="bar"></span>
-          <span className="bar"></span>
+        <div className={`${styles.hamburger} ${isMenuOpen ? styles.active : ''}`} onClick={toggleMenu}>
+          <span className={styles.bar}></span>
+          <span className={styles.bar}></span>
+          <span className={styles.bar}></span>
         </div>
-        <div className={`overlay ${isMenuOpen ? 'active' : ''}`} onClick={toggleMenu}></div>
+        <div className={`${styles.overlay} ${isMenuOpen ? styles.active : ''}`} onClick={toggleMenu}></div>
       </header>
     );
 
