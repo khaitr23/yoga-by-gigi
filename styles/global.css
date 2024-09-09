@@ -44,15 +44,26 @@ p {
 }
 html {
   scroll-behavior: smooth;
-  height: 100vh;
+  /* height: 100vh; */
 }
 body {
   font-family: var(-ff);
   padding: 0px;
-  height: 100vh;
   margin: auto;
   background-color: var(--colorprimary);
   color: var(--colorsecondary);
+  /* min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; */
+}
+
+footer {
+  margin-top: auto;
+  bottom: 0;
+}
+main {
+  min-height: 100vh;
 }
 
 .section {
@@ -93,11 +104,7 @@ header a {
     flex-direction: column-reverse;
     padding-bottom: 40px;
   }
-  .footer {
-    flex-direction: column;
-  }
 }
-
 /* Hero */
 .column {
   display: flex;
@@ -114,8 +121,8 @@ img {
 Image {
   width: 100%;
 }
-.image-container{
-  position:relative;
+.image-container {
+  position: relative;
   width: 100%;
 }
 .button {
@@ -143,4 +150,32 @@ Image {
   margin-bottom: 10vh;
   text-align: center;
   padding: 10px;
+}
+#blogs {
+  text-align: center;
+  padding: 45px 0px;
+}
+.blogs {
+  margin-top: 60px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  list-style: none;
+}
+
+.blogs li {
+  flex: 1;
+  min-width: 300px;
+  max-width: 30vw;
+  max-height: 30vh;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.blogs li:hover {
+  scale: 1.02;
+  transition: var(--transition);
 }

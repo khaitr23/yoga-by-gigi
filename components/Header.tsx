@@ -1,5 +1,6 @@
 'use client';
 import React, {useState} from 'react';
+import Link from 'next/link';
 import logoPic from '../public/images/logo.png';
 import Image from 'next/image';
 import styles from './Header.module.css';
@@ -15,12 +16,12 @@ export default function Header(){
     return(
         <header className={styles.headerSection}>
         <a href="#"><Image src={logoPic} alt="" className={styles.logo} layout='intrinsic'/></a>
-        <ul className={`${styles.navMenu} ${isMenuOpen ? styles.active : ''}`} onClick={toggleMenu}>
+        <ul className={`${styles.navMenu} ${isMenuOpen ? styles.active : ''}`}>
           <li className={styles.navItem}>
             <a href="#" className={styles.navLink}>Retreats</a>
           </li>
           <li className={styles.navItem}>
-            <a href="#" className={styles.navLink}>Blog</a>
+            <Link href="/blogs" className={styles.navLink}>Blog</Link>
           </li>
           <li className={styles.navItem}>
             <a href="#" className={styles.navLink}>Booking</a>
