@@ -6,8 +6,15 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { secret, slug } = req.query;
-  if (secret !== process.env.CONTENTFUL_PREVIEW_SECRET || !slug) {
-    return res.status(401).json({ message: "Invalid token" });
+  if (secret !== process.env.CONTENTFUL_PREVIEW_SECRET) {
+    return res
+      .status(401)
+      .json({ message: "Invalid token, secrets don't match!" });
+  }
+  if (!slug) {
+    return res
+      .status(401)
+      .json({ message: "Invalid token, slug is undefined!" });
   }
 
   const response = await previewClient.getEntries({

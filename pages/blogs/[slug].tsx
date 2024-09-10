@@ -4,12 +4,13 @@ import { client, previewClient } from "../../lib/contentful/client";
 import PostHeader from "../../components/posts/PostHeader";
 import Skeleton from "../../components/ui/Skeleton";
 import PostBody from "../../components/posts/PostBody";
+import PreviewAlert from "../../components/ui/PreviewAlert";
 
 export default function Post({ post, preview }) {
   const router = useRouter();
-  const { slug } = router.query;
   return (
     <main className="section">
+      {preview && <PreviewAlert />}
       <div className="container">
         <article>
           {router.isFallback ? (

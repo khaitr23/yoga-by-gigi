@@ -9,8 +9,8 @@ export default function Footer() {
       <div className={styles.connectMe}>
         <p>Connect with me on</p>
         <div className={styles.socialIcons}>
-          <Image src={fbIcon} alt="" />
-          <Image src={instaIcon} alt="" />
+          <Image className={styles.socialIconImage} src={fbIcon} alt="" />
+          <Image className={styles.socialIconImage} src={instaIcon} alt="" />
         </div>
       </div>
       <div className={styles.vl}></div>

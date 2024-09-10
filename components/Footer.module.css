@@ -12,14 +12,18 @@
 .socialIcons {
   margin-top: 5px;
   display: flex;
-  gap: 40px;
   justify-content: center;
   align-items: center;
 }
-.socialIcons img {
+.socialIcons Image {
   width: 20px;
   cursor: pointer;
 }
+.socialIconImage:hover {
+  scale: 1.15;
+  transition: var(--transition);
+}
+
 .vl {
   border-left: 2px solid #333;
   height: auto;

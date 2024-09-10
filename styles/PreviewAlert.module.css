@@ -1,0 +1,45 @@
+/* The alert message box */
+.alertBox {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background-color: #7b7b7b;
+  color: black;
+  margin-bottom: 15px;
+  justify-content: space-between;
+  display: flex;
+  z-index: 100;
+}
+
+.closebtn {
+  margin-left: 10px;
+  margin-right: 10px;
+  flex-shrink: 0;
+  left: 0;
+  color: white;
+  font-weight: bold;
+  font-size: 35px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.closebtn:hover {
+  color: black;
+}
+
+.linkText {
+  color: #e1ad01;
+  flex-grow: 1;
+  text-align: left;
+}
+
+.linkText:hover {
+  color: #734023;
+}
+
+.warningText {
+  color: black;
+  text-align: right;
+  flex-grow: 1;
+}
+.warningText:hover {
+  color: black;
+}
