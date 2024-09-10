@@ -7,18 +7,32 @@ export default function PostCard({ post }) {
   return (
     <li className="postCards">
       <Link href={`/blogs/${slug}`} aria-label={title}>
-        <ContentfulImage
-          src={coverImage.fields.file.url}
-          alt={`Cover Image for ${title}`}
-          width={coverImage.fields.file.details.image.width}
-          height={coverImage.fields.file.details.image.height}
-          layout="responsive"
-        />
-        <h2>{title}</h2>
-        <div>
-          <DateTimeComponent dateString={date} options={{}}></DateTimeComponent>
+        <div className="postCards">
+          <div className="postCardImage">
+            <ContentfulImage
+              src={coverImage.fields.file.url}
+              alt={`Cover Image for ${title}`}
+              width={0}
+              height={0}
+              sizes="100vw"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+          </div>
+          <div className="postCardText">
+            <h3>{title}</h3>
+            <div>
+              <DateTimeComponent
+                dateString={date}
+                options={{}}
+              ></DateTimeComponent>
+            </div>
+            <p>{summary}</p>
+          </div>
         </div>
-        <p>{summary}</p>
       </Link>
     </li>
   );
