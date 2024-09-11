@@ -6,16 +6,21 @@ import { GetStaticProps } from "next";
 export default function Blogs({ posts }) {
   return (
     <main>
-      <div id="blogs" className="section">
+      <div id="blogsTitle" className="section">
         <h1>Blogs.</h1>
         <p>You can check out my blogs below!</p>
       </div>
-      <div className="blogListContainer">
-        <ul className="section blogs">
-          {posts.map((post) => (
-            <PostCard key={post.fields.slug} post={post} />
-          ))}
-        </ul>
+
+      <div style={{ padding: "2rem", paddingBottom: "6rem" }}>
+        <div style={{ paddingBottom: "6rem" }}>
+          <div className="blogListContainer">
+            <ul className="blogGrid">
+              {posts.map((post) => (
+                <PostCard key={post.fields.slug} post={post} />
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
     </main>
   );
