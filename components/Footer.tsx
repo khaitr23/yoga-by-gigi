@@ -1,7 +1,7 @@
 import Image from "next/image";
 import instaIcon from "../public/images/icon-instagram.svg";
 import fbIcon from "../public/images/icon-facebook.svg";
-import styles from "./Footer.module.css";
+import styles from "../styles/Footer.module.css";
 
 export default function Footer() {
   return (
