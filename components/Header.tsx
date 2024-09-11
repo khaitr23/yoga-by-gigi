@@ -15,12 +15,20 @@ export default function Header() {
   return (
     <header className={styles.headerSection}>
       <a href="#">
-        <Image
-          src={logoPic}
-          alt=""
-          className={styles.logo}
-          layout="intrinsic"
-        />
+        <Link href="/">
+          <Image
+            src={logoPic}
+            alt=""
+            className={styles.logo}
+            width={0}
+            height={0}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+        </Link>
       </a>
       <ul className={`${styles.navMenu} ${isMenuOpen ? styles.active : ""}`}>
         <li className={styles.navItem}>

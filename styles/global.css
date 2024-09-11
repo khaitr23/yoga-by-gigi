@@ -116,7 +116,7 @@ header a {
 .column {
   display: flex;
   align-items: top;
-  gap: 20px;
+  gap: 40px;
   flex-wrap: wrap;
 }
 .hero div {
