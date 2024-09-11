@@ -12,7 +12,7 @@ export default function Blogs({ posts }) {
       </div>
       <div className="blogListContainer">
         <ul className="section blogs">
-          {posts.map((post, i) => (
+          {posts.map((post) => (
             <PostCard key={post.fields.slug} post={post} />
           ))}
         </ul>
