@@ -30,7 +30,7 @@ export default function Header() {
       </Link>
       <ul className={`${styles.navMenu} ${isMenuOpen ? styles.active : ""}`}>
         <li className={styles.navItem}>
-          <a href="#" className={styles.navLink} onClick={toggleMenu}>
+          <a href="/retreats" className={styles.navLink} onClick={toggleMenu}>
             Retreats
           </a>
         </li>

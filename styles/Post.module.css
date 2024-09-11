@@ -1,0 +1,13 @@
+/* [slug] css content */
+#avatarNameAndDateContainer {
+  display: flex;
+  margin-bottom: 2.5rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#coverImageContainer {
+  margin-bottom: 2rem;
+  max-width: 500px;
+  max-height: auto;
+}

@@ -1,22 +1,22 @@
 import { client } from "../../lib/contentful/client";
-import PostCard from "../../components/posts/PostCard";
 import { GetStaticProps } from "next";
-import styles from "../../styles/Blogs.module.css";
+import RetreatPostCard from "../../components/retreats/RetreatPostCard";
+import styles from "../../styles/Retreats.module.css";
 
-export default function Blogs({ posts }) {
+export default function Retreats({ retreat }) {
   return (
     <main>
       <div id={styles.blogsTitle} className="section">
-        <h1>Blogs.</h1>
-        <p>You can check out my blogs below!</p>
+        <h1>Retreats.</h1>
+        <p>You can check out my retreats below!</p>
       </div>
 
       <div style={{ padding: "2rem", paddingBottom: "6rem" }}>
         <div style={{ paddingBottom: "6rem" }}>
           <div className={styles.blogListContainer}>
             <ul className={styles.blogGrid}>
-              {posts.map((post) => (
-                <PostCard key={post.fields.slug} post={post} />
+              {retreat.map((retreat) => (
+                <RetreatPostCard key={retreat.fields.slug} retreat={retreat} />
               ))}
             </ul>
           </div>
@@ -27,10 +27,10 @@ export default function Blogs({ posts }) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const response = await client.getEntries({ content_type: "post" });
+  const response = await client.getEntries({ content_type: "retreat" });
   return {
     props: {
-      posts: response.items,
+      retreat: response.items,
       revalidate: 60,
     },
   };

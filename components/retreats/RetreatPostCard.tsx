@@ -1,13 +1,14 @@
 import Link from "next/link";
 import ContentfulImage from "../ui/ContentfulImage";
 import DateTimeComponent from "../ui/DateTimeComponent";
-import styles from "../../styles/PostCard.module.css";
+import styles from "../../styles/RetreatPostCard.module.css";
 
-export default function PostCard({ post }) {
-  const { title, slug, coverImage, date, summary } = post.fields;
+export default function RetreatPostCard({ retreat }) {
+  const { title, slug, coverImage, summary, startDate, endDate, location } =
+    retreat.fields;
   return (
     <li className={styles.postCards}>
-      <Link href={`/blogs/${slug}`} aria-label={title}>
+      <Link href={`/retreats/${slug}`} aria-label={title}>
         <div className={styles.postCardImage}>
           <ContentfulImage
             src={coverImage.fields.file.url}
@@ -26,7 +27,14 @@ export default function PostCard({ post }) {
           <h3 className={styles.postCardTitle}>{title}</h3>
           <div>
             <DateTimeComponent
-              dateString={date}
+              dateString={startDate}
+              options={{}}
+              className={styles.postCardDate}
+            ></DateTimeComponent>
+          </div>{" "}
+          <div>
+            <DateTimeComponent
+              dateString={endDate}
               options={{}}
               className={styles.postCardDate}
             ></DateTimeComponent>

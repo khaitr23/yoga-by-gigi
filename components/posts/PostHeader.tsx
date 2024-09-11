@@ -2,6 +2,7 @@ import Link from "next/link";
 import Avatar from "../ui/Avatar";
 import ContentfulImage from "../ui/ContentfulImage";
 import DateTimeComponent from "../ui/DateTimeComponent";
+import styles from "../../styles/Post.module.css";
 
 export default function PostHeader({ post }) {
   const { title, coverImage, author, date } = post.fields;
@@ -13,11 +14,11 @@ export default function PostHeader({ post }) {
       </h2>
       <br />
       <h2>{title}</h2>
-      <div id="avatarNameAndDateContainer">
+      <div id={styles.avatarNameAndDateContainer}>
         <Avatar name={author.fields.name} picture={author.fields.picture} />
         <DateTimeComponent dateString={date} options={{}} />
       </div>
-      <div id="coverImageContainer">
+      <div id={styles.coverImageContainer}>
         <ContentfulImage
           src={coverImage.fields.file.url}
           alt={`Cover Image for ${title}`}
