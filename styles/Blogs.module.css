@@ -38,7 +38,14 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
-
+/* @media (max-width: 800px) {
+  .blogs {
+    flex-direction: column;
+    max-height: auto;
+    max-width: 300px;
+    padding-bottom: 40px;
+  }
+} */
 /* .blogs {
     margin-top: 60px;
     display: flex;

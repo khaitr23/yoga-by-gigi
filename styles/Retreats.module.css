@@ -4,6 +4,36 @@
   margin-bottom: 0;
 }
 
+.buttonContainer {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.buttonContainer p {
+  display: inline;
+}
+
+.textButton {
+  cursor: pointer;
+  margin: 0 0.5rem;
+  padding: 0.5rem 1rem;
+}
+
+.activeTextButton {
+  text-decoration: underline;
+  color: var(--coloraccent);
+}
+
+.inactiveTextButton {
+  text-decoration: none;
+  color: var(--colorsecondary);
+}
+.inactiveTextButton:hover {
+  color: var(--buttonaccent);
+}
+
 .blogGrid {
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -38,11 +68,3 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
-
-/* .blogs {
-      margin-top: 60px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      list-style: none;
-    } */

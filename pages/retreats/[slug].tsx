@@ -1,12 +1,29 @@
 import { useRouter } from "next/router";
 import { client, previewClient } from "../../lib/contentful/client";
+import PreviewAlert from "../../components/ui/PreviewAlert";
+import Skeleton from "../../components/ui/Skeleton";
+import PostBody from "../../components/posts/PostBody";
+import RetreatHeader from "../../components/retreats/RetreatHeader";
+import MapEmbed from "../../components/ui/MapEmbed";
 
 export default function Retreat({ retreat, preview }) {
   const router = useRouter();
-  const { slug } = router.query;
   return (
     <main className="section">
-      <p>Slug: {slug}</p>
+      {preview && <PreviewAlert />}
+      <div className="container">
+        <article>
+          {router.isFallback ? (
+            <Skeleton />
+          ) : (
+            <>
+              <RetreatHeader retreat={retreat} />
+              <PostBody post={retreat} />
+              <MapEmbed retreat={retreat} />
+            </>
+          )}
+        </article>
+      </div>
     </main>
   );
 }

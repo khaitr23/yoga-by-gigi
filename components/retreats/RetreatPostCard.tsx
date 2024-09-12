@@ -7,7 +7,7 @@ export default function RetreatPostCard({ retreat }) {
   const { title, slug, coverImage, summary, startDate, endDate, location } =
     retreat.fields;
   return (
-    <li className={styles.postCards}>
+    <li className={`${styles.postCards}`}>
       <Link href={`/retreats/${slug}`} aria-label={title}>
         <div className={styles.postCardImage}>
           <ContentfulImage
@@ -25,14 +25,13 @@ export default function RetreatPostCard({ retreat }) {
         </div>
         <div className={styles.postCardText}>
           <h3 className={styles.postCardTitle}>{title}</h3>
-          <div>
+          <div className={styles.dateContainer}>
             <DateTimeComponent
               dateString={startDate}
               options={{}}
               className={styles.postCardDate}
-            ></DateTimeComponent>
-          </div>{" "}
-          <div>
+            ></DateTimeComponent>{" "}
+            <p> to </p>
             <DateTimeComponent
               dateString={endDate}
               options={{}}
