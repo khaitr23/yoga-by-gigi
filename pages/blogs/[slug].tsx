@@ -5,6 +5,8 @@ import PostHeader from "../../components/posts/PostHeader";
 import Skeleton from "../../components/ui/Skeleton";
 import PostBody from "../../components/posts/PostBody";
 import PreviewAlert from "../../components/ui/PreviewAlert";
+import proseStyle from "../../styles/prose.module.css";
+import Link from "next/link";
 
 export default function Post({ post, preview }) {
   const router = useRouter();
@@ -12,7 +14,14 @@ export default function Post({ post, preview }) {
     <main className="section">
       {preview && <PreviewAlert />}
       <div className="container">
-        <article>
+        <h2>
+          <Link href="/blogs">←Back to Blogs</Link>
+        </h2>
+        <br />
+        <article
+          style={{ marginLeft: "auto", marginRight: "auto" }}
+          className={proseStyle.prose}
+        >
           {router.isFallback ? (
             <Skeleton />
           ) : (

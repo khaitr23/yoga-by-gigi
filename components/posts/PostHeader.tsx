@@ -9,11 +9,7 @@ export default function PostHeader({ post }) {
 
   return (
     <>
-      <h2>
-        <Link href="/blogs">←Back to Blogs</Link>
-      </h2>
-      <br />
-      <h2>{title}</h2>
+      <h1 style={{ marginBottom: "0.5rem" }}>{title}</h1>
       <div id={styles.avatarNameAndDateContainer}>
         <Avatar name={author.fields.name} picture={author.fields.picture} />
         <DateTimeComponent dateString={date} options={{}} />

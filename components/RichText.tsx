@@ -73,8 +73,8 @@ const options = {
           height={0}
           sizes="100vw"
           style={{
-            width: "30%",
-            height: "30%",
+            width: "100%",
+            height: "100%",
             objectFit: "cover",
           }}
         />

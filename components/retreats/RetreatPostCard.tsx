@@ -31,7 +31,7 @@ export default function RetreatPostCard({ retreat }) {
               options={{}}
               className={styles.postCardDate}
             ></DateTimeComponent>{" "}
-            <p> to </p>
+            <p style={{ paddingLeft: "1rem", paddingRight: "1rem" }}> to </p>
             <DateTimeComponent
               dateString={endDate}
               options={{}}

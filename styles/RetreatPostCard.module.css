@@ -20,11 +20,6 @@
   margin-bottom: 0;
 }
 
-.dateContainer p {
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
 @media (max-width: 800px) {
   .postCards {
     width: 80vw;
@@ -48,7 +43,7 @@
 }
 .postCardTitle {
   margin-bottom: 0.25rem;
-  font-size: 1.25rem;
+  font-size: 1.6rem;
   line-height: 1.75rem;
   line-height: 1.375;
   color: var(--colorsecondary);
@@ -62,5 +57,6 @@
 .postCardSummary {
   margin-bottom: 1rem;
   font-size: 1rem;
+  color: var(--colorsecondary);
   line-height: 1.5rem;
 }

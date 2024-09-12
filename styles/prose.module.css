@@ -1,0 +1,108 @@
+/* Basic styling for the prose content */
+.prose {
+  max-width: 70ch;
+  margin-left: auto;
+  margin-right: auto;
+  /* line-height: 1.75; */
+  font-size: 1rem;
+}
+
+/* Headings */
+/* .prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+} */
+
+.prose h1 {
+  font-size: 2.25em;
+  font-weight: bold;
+}
+
+.prose h2 {
+  font-size: 1.75em;
+}
+
+.prose h3 {
+  font-size: 1.5em;
+}
+
+.prose h4 {
+  font-size: 1.25em;
+}
+
+/* Paragraphs */
+.prose p {
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+
+/* Links */
+.prose a {
+  color: #0070f3;
+  text-decoration: underline;
+}
+
+/* Lists */
+.prose ul,
+.prose ol {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+  padding-left: 1.5em;
+}
+
+.prose ul {
+  list-style-type: disc;
+}
+
+.prose ol {
+  list-style-type: decimal;
+}
+
+/* Blockquotes */
+.prose blockquote {
+  margin: 1.2em 0;
+  padding-left: 1em;
+  border-left: 0.25rem solid #ccc;
+  font-style: italic;
+  color: #555;
+}
+
+/* Code blocks and inline code */
+.prose code {
+  background-color: #f5f5f5;
+  padding: 0.2em 0.4em;
+  border-radius: 0.3em;
+  font-size: 0.95em;
+}
+
+.prose pre {
+  background-color: #f0f0f0;
+  padding: 1em;
+  border-radius: 0.5em;
+  overflow-x: auto;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+/* Media elements (images, videos, etc.) */
+.prose img,
+.prose video {
+  max-width: 100%;
+}
+
+.prose figure {
+  text-align: center;
+}
+
+.prose figcaption {
+  font-size: 0.875em;
+  color: #666;
+}
+
+/* Horizontal rule */
+.prose hr {
+  margin: 1.5em 0;
+  border: none;
+  border-top: 1px solid #ccc;
+}

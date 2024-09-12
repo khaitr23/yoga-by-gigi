@@ -5,6 +5,8 @@ import Skeleton from "../../components/ui/Skeleton";
 import PostBody from "../../components/posts/PostBody";
 import RetreatHeader from "../../components/retreats/RetreatHeader";
 import MapEmbed from "../../components/ui/MapEmbed";
+import proseStyle from "../../styles/prose.module.css";
+import Link from "next/link";
 
 export default function Retreat({ retreat, preview }) {
   const router = useRouter();
@@ -12,14 +14,30 @@ export default function Retreat({ retreat, preview }) {
     <main className="section">
       {preview && <PreviewAlert />}
       <div className="container">
-        <article>
+        <h2>
+          <Link href="/retreats">←Back to Retreats</Link>
+        </h2>
+        <br />
+        <article
+          className={proseStyle.prose}
+          style={{ marginLeft: "auto", marginRight: "auto" }}
+        >
           {router.isFallback ? (
             <Skeleton />
           ) : (
             <>
               <RetreatHeader retreat={retreat} />
               <PostBody post={retreat} />
-              <MapEmbed retreat={retreat} />
+              <div
+                className="mapContainer"
+                style={{
+                  marginTop: "2rem",
+                  textDecoration: "underline",
+                }}
+              >
+                <p style={{ textAlign: "center" }}>Location</p>
+                <MapEmbed retreat={retreat} />
+              </div>
             </>
           )}
         </article>

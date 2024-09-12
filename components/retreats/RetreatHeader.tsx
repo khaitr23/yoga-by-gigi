@@ -9,16 +9,23 @@ export default function RetreatHeader({ retreat }) {
 
   return (
     <>
-      <h2>
-        <Link href="/retreats">←Back to Retreats</Link>
-      </h2>
-      <br />
-      <h2>{title}</h2>
+      <h1 style={{ marginBottom: "0.5rem" }}>{title}</h1>
       <div id={styles.avatarNameAndDateContainer}>
         <Avatar name={author.fields.name} picture={author.fields.picture} />
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          marginBottom: "0px",
+          fontWeight: "bold",
+        }}
+      >
         <DateTimeComponent dateString={startDate} options={{}} />
+        <p style={{ paddingLeft: "1rem", paddingRight: "1rem" }}> to </p>
         <DateTimeComponent dateString={endDate} options={{}} />
       </div>
+
       <div id={styles.coverImageContainer}>
         <ContentfulImage
           src={coverImage.fields.file.url}
@@ -28,7 +35,7 @@ export default function RetreatHeader({ retreat }) {
           sizes="100vw"
           style={{
             width: "auto",
-            height: "auto%",
+            height: "auto",
             objectFit: "cover",
           }}
         />
