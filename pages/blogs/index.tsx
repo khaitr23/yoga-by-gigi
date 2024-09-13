@@ -28,7 +28,6 @@ export default function Blogs({ posts }) {
 
 export const getStaticProps: GetStaticProps = async () => {
   const response = await client.getEntries({ content_type: "post" });
-  console.log(response.items[0].fields);
   const sortedBlogs = response.items.sort((a, b) => {
     if (a.fields.date < b.fields.date) {
       return 1;

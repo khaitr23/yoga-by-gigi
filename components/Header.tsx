@@ -55,7 +55,7 @@ export default function Header() {
           </a>
         </li> */}
         <li className={styles.navItem}>
-          <a href="#" className={styles.navLink} onClick={toggleMenu}>
+          <a href="/about" className={styles.navLink} onClick={toggleMenu}>
             About
           </a>
         </li>

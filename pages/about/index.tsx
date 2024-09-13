@@ -1,7 +1,7 @@
-import { client, previewClient } from "../lib/contentful/client";
-import CustomPage from "../components/CustomPage";
+import { client, previewClient } from "../../lib/contentful/client";
+import CustomPage from "../../components/CustomPage";
 
-export default function Home({ content }) {
+export default function About({ content }) {
   return <CustomPage content={content} />;
 }
 
@@ -10,7 +10,7 @@ export async function getStaticProps({ preview = false }) {
 
   const response = await cfClient.getEntries({
     content_type: "page",
-    "fields.slug": "homepage",
+    "fields.slug": "about",
   });
 
   const sections = response?.items?.[0]?.fields?.sections || [
