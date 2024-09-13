@@ -100,8 +100,18 @@ header a {
   font-weight: normal;
 }
 
+.column.reverse {
+  flex-direction: row-reverse;
+}
+
 /* media query for hamburger */
 @media (max-width: 800px) {
+  .column.reverse.textBelowImage {
+    flex-direction: column-reverse;
+  }
+  .column.reverse.textAboveImage {
+    flex-direction: column;
+  }
   .hero {
     flex-direction: column-reverse;
     padding-bottom: 40px;
@@ -111,16 +121,14 @@ header a {
 .column {
   display: flex;
   align-items: top;
-  gap: 40px;
+  gap: 20px;
   flex-wrap: wrap;
 }
 .hero div {
   flex: 1;
 }
+
 img {
-  width: 100%;
-}
-Image {
   width: 100%;
 }
 .image-container {
@@ -147,7 +155,7 @@ Image {
   flex-wrap: wrap;
   align-items: left;
 }
-.offerings {
+.break {
   margin: auto;
   margin-bottom: 10vh;
   text-align: center;
