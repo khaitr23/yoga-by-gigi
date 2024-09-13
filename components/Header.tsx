@@ -49,9 +49,14 @@ export default function Header() {
             Shop
           </a>
         </li>
-        <li className={styles.navItem}>
+        {/* <li className={styles.navItem}>
           <a href="#" className={styles.navLink} onClick={toggleMenu}>
             Contact
+          </a>
+        </li> */}
+        <li className={styles.navItem}>
+          <a href="#" className={styles.navLink} onClick={toggleMenu}>
+            About
           </a>
         </li>
       </ul>
