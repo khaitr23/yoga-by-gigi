@@ -40,7 +40,7 @@ export default function Header() {
           </Link>
         </li>
         <li className={styles.navItem}>
-          <a href="#" className={styles.navLink} onClick={toggleMenu}>
+          <a href="/booking" className={styles.navLink} onClick={toggleMenu}>
             Booking
           </a>
         </li>

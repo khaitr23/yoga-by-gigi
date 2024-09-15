@@ -1,8 +1,8 @@
 import { client, previewClient } from "../lib/contentful/client";
 import CustomPage from "../components/CustomPage";
 
-export default function Home({ content }) {
-  return <CustomPage content={content} />;
+export default function Home({ content, preview }) {
+  return <CustomPage content={content} preview={preview} />;
 }
 
 export async function getStaticProps({ preview = false }) {
@@ -49,7 +49,6 @@ export async function getStaticProps({ preview = false }) {
   };
 
   return {
-    props: { content },
-    revalidate: 60,
+    props: { content, preview, revalidate: 60 },
   };
 }

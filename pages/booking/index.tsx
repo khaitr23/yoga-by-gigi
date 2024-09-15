@@ -10,7 +10,7 @@ export async function getStaticProps({ preview = false }) {
 
   const response = await cfClient.getEntries({
     content_type: "page",
-    "fields.slug": "about",
+    "fields.slug": "booking",
   });
 
   const sections = response?.items?.[0]?.fields?.sections || [

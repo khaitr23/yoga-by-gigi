@@ -1,10 +1,12 @@
 import ContentfulImage from "../components/ui/ContentfulImage";
+import PreviewAlert from "./ui/PreviewAlert";
 
-export default function CustomPage({ content }) {
+export default function CustomPage({ content, preview }) {
   const { sections } = content;
   let nonBreakIndex = 0;
   return (
     <main>
+      {preview && <PreviewAlert />}
       {sections.map((section, index) => {
         // Logic to reverse image and text in every other div (if the its a break section, then ignore it)
         const isBreak = section.sectionType === "break";
