@@ -30,6 +30,11 @@ export default function Header() {
       </Link>
       <ul className={`${styles.navMenu} ${isMenuOpen ? styles.active : ""}`}>
         <li className={styles.navItem}>
+          <a href="/" className={styles.navLink} onClick={toggleMenu}>
+            My Yoga Journey
+          </a>
+        </li>
+        <li className={styles.navItem}>
           <a href="/retreats" className={styles.navLink} onClick={toggleMenu}>
             Retreats
           </a>
@@ -54,11 +59,6 @@ export default function Header() {
             Contact
           </a>
         </li> */}
-        <li className={styles.navItem}>
-          <a href="/about" className={styles.navLink} onClick={toggleMenu}>
-            About
-          </a>
-        </li>
       </ul>
       <div
         className={`${styles.hamburger} ${isMenuOpen ? styles.active : ""}`}
