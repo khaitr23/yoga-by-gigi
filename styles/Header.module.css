@@ -82,9 +82,16 @@
   transform: scaleX(1);
 }
 
+/* placeholder keeps the 3-col grid balanced when hamburger is outside the wrapper */
+.hamburgerPlaceholder {
+  display: none;
+  justify-self: end;
+  width: 36px;
+  height: 36px;
+}
+
 /* ── Hamburger button ── */
 .hamburger {
-  justify-self: end;
   display: none;
   flex-direction: column;
   justify-content: center;
@@ -95,8 +102,6 @@
   background: none;
   border: none;
   cursor: pointer;
-  z-index: 200;
-  position: relative;
 }
 
 .bar {
@@ -285,8 +290,18 @@
     display: none;
   }
 
+  .hamburgerPlaceholder {
+    display: block;
+  }
+
+  /* Always fixed on mobile — outside the backdrop-filter stacking context,
+     so z-index is relative to the root and beats the sidebar (120) */
   .hamburger {
     display: flex;
+    position: fixed;
+    top: 14px;
+    right: 5vw;
+    z-index: 200;
   }
 
   .overlay {

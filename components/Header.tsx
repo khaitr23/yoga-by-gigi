@@ -53,19 +53,24 @@ export default function Header() {
             ))}
           </ul>
 
-          {/* ── Hamburger button ── */}
-          <button
-            className={`${styles.hamburger} ${isMenuOpen ? styles.active : ""}`}
-            onClick={toggle}
-            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={isMenuOpen}
-          >
-            <span className={styles.bar} />
-            <span className={styles.bar} />
-            <span className={styles.bar} />
-          </button>
+          {/* Placeholder keeps the 3-col grid balanced on desktop */}
+          <div className={styles.hamburgerPlaceholder} aria-hidden="true" />
         </header>
       </div>
+
+      {/* ── Hamburger lives outside headerWrapper so backdrop-filter
+           stacking context doesn't trap it — it can freely float above
+           the sidebar when position:fixed + high z-index ── */}
+      <button
+        className={`${styles.hamburger} ${isMenuOpen ? styles.active : ""}`}
+        onClick={toggle}
+        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+        aria-expanded={isMenuOpen}
+      >
+        <span className={styles.bar} />
+        <span className={styles.bar} />
+        <span className={styles.bar} />
+      </button>
 
       {/* ── Mobile sidebar ── */}
       <div
