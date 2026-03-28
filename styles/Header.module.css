@@ -1,36 +1,68 @@
+/* ─────────────────────────────────────────────
+   Header — yoga by gigi
+   ───────────────────────────────────────────── */
+
 .headerWrapper {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(250, 249, 246, 0.82);
+  background: rgba(250, 249, 246, 0.88);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid rgba(115, 64, 35, 0.09);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .headerSection {
   width: 90vw;
   max-width: 1080px;
-  margin: auto;
-  margin-bottom: 0;
-  padding: 0 0 12px;
+  /* Override global: header { height: 60px; margin-top: 20px } */
+  height: auto;
+  margin: 0 auto;
+  padding: 12px 0;
+  /* 3-col grid: logo | nav (centered) | hamburger
+     equal outer columns keep the nav truly centered */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
 }
 
+/* ── Logo ── */
+.logo {
+  width: 50px;
+  display: block;
+}
+
+/* Explicitly pin each item to its column so hiding the nav
+   on mobile doesn't shift the hamburger out of position */
+.headerSection > a:first-child {
+  grid-column: 1;
+  justify-self: start;
+}
+
+.navMenu {
+  grid-column: 2;
+}
+
+.hamburger {
+  grid-column: 3;
+}
+
+/* ── Desktop nav ── */
 .navMenu {
   display: flex;
   align-items: center;
   gap: 60px;
-}
-
-.navMenu li {
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-/* Underline draws in from left on hover */
 .navLink {
   position: relative;
   padding-bottom: 3px;
+  font-family: var(--ff);
+  color: var(--colorsecondary);
+  text-decoration: none;
 }
 
 .navLink::after {
@@ -50,90 +82,218 @@
   transform: scaleX(1);
 }
 
+/* ── Hamburger button ── */
 .hamburger {
+  justify-self: end;
   display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  padding: 6px;
+  background: none;
+  border: none;
   cursor: pointer;
+  z-index: 200;
+  position: relative;
 }
 
 .bar {
   display: block;
-  width: 25px;
-  height: 3px;
-  margin: 5px auto;
-  transition: var(--transition);
-  background-color: var(--colorsecondary);
+  width: 22px;
+  height: 1.5px;
+  background: var(--colorsecondary, #734023);
+  border-radius: 2px;
+  transform-origin: center;
+  transition:
+    transform 0.45s cubic-bezier(0.23, 1, 0.32, 1),
+    opacity   0.3s  ease,
+    width     0.3s  ease;
 }
 
-.logo {
-  width: 50px;
+/* Morph to × */
+.hamburger.active .bar:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+.hamburger.active .bar:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.hamburger.active .bar:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
 }
 
-/* media query for hamburger */
+/* Subtle hover breathe when closed */
+.hamburger:not(.active):hover .bar:nth-child(1) { width: 18px; }
+.hamburger:not(.active):hover .bar:nth-child(3) { width: 26px; }
+
+/* ── Overlay ── */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(115, 64, 35, 0.08);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  z-index: 110;
+}
+
+.overlayActive {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100dvh;
+  background: var(--colorprimary, #faf9f6);
+  background-image: radial-gradient(circle, rgba(115, 64, 35, 0.05) 1px, transparent 1px);
+  background-size: 26px 26px;
+  border-left: 1px solid rgba(115, 64, 35, 0.12);
+  padding: 4.5rem 2.5rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  z-index: 120;
+  transform: translateX(100%);
+  transition: transform 0.55s cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: transform;
+}
+
+.sidebarOpen {
+  transform: translateX(0);
+}
+
+/* Brand inside sidebar */
+.sidebarBrand {
+  margin-bottom: 1.25rem;
+}
+
+.sidebarBrandName {
+  font-family: var(--ff);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--colorsecondary, #734023);
+  opacity: 0.7;
+  letter-spacing: 0.04em;
+}
+
+.sidebarBrandDot {
+  color: var(--coloraccent, #e1ad01);
+  font-style: normal;
+}
+
+/* Gold rule line */
+.sidebarRule {
+  display: block;
+  width: 32px;
+  height: 1px;
+  background: var(--coloraccent, #e1ad01);
+  margin-bottom: 2.5rem;
+  opacity: 0.7;
+}
+
+/* Nav links */
+.sidebarNav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+}
+
+.sidebarNavItem {
+  border-bottom: 1px solid rgba(115, 64, 35, 0.07);
+  /* stagger slide-in */
+  opacity: 0;
+  transform: translateX(20px);
+  transition:
+    opacity  0.45s ease,
+    transform 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+  transition-delay: calc(var(--i, 0) * 0.07s + 0.2s);
+}
+
+.sidebarNavItem:last-child {
+  border-bottom: none;
+}
+
+.sidebarOpen .sidebarNavItem {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.sidebarNavLink {
+  display: block;
+  padding: 1rem 0;
+  font-family: var(--ff);
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: normal;
+  letter-spacing: 0.03em;
+  color: var(--colorsecondary, #734023);
+  text-decoration: none;
+  position: relative;
+  transition: color 0.2s ease, padding-left 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.sidebarNavLink::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0;
+  height: 1px;
+  background: var(--coloraccent, #e1ad01);
+  transition: width 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  transform: translateY(-50%);
+}
+
+.sidebarNavLink:hover {
+  padding-left: 1rem;
+}
+
+.sidebarNavLink:hover::before {
+  width: 0.65rem;
+}
+
+/* Footer text */
+.sidebarFooter {
+  margin-top: auto;
+  padding-top: 2rem;
+}
+
+.sidebarFooterText {
+  font-family: var(--ff);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--colorsecondary, #734023);
+  opacity: 0.25;
+  text-transform: lowercase;
+}
+
+/* ── Mobile breakpoint ── */
 @media (max-width: 800px) {
-  .headerSection {
-    margin: auto;
+  .navMenu {
+    display: none;
   }
 
   .hamburger {
+    display: flex;
+  }
+
+  .overlay {
     display: block;
   }
-  .hamburger.active {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 11;
-  }
-  .hamburger.active .bar:nth-child(2) {
-    opacity: 0;
-  }
-  .hamburger.active .bar:nth-child(1) {
-    transform: translateY(8px) rotate(45deg);
-  }
-  .hamburger.active .bar:nth-child(3) {
-    transform: translateY(8px) rotate(-45deg);
-  }
-  .navMenu {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    position: fixed;
-    right: -100%;
-    top: 0;
-    margin: 0;
-    height: 100vh;
-    width: 250px;
-    background-color: var(--colorprimary);
-    align-items: flex-start;
-    padding: 20px;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-    transition: var(--transition);
-    z-index: 10;
-  }
-  .navItem a {
-    padding: 0px 5vw;
-    display: flex;
-  }
-  .navMenu.active {
-    right: 0;
-    transition: var(--transition);
-  }
 
-  /* Overlay to dim main page when nav menu is open */
-  .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.35s ease;
-    z-index: 9;
-  }
-
-  .overlay.active {
-    opacity: 1;
-    pointer-events: all;
+  .sidebar {
+    display: flex;
   }
 }
