@@ -1,26 +1,18 @@
 import ContentfulImage from "./ContentfulImage";
+import styles from "../../styles/Avatar.module.css";
 
 export default function Avatar({ name, picture }) {
   return (
-    <div style={{ display: "flex", alignItems: "center" }}>
-      <div
-        style={{
-          position: "relative",
-          width: "40px",
-          height: "40px",
-          marginRight: "1rem",
-        }}
-      >
+    <div className={styles.avatar}>
+      <div className={styles.pictureWrapper}>
         <ContentfulImage
           src={picture.fields.file.url}
           fill
-          style={{ borderRadius: "9999px", margin: "0px" }}
+          style={{ objectFit: "cover" }}
           alt={name}
         />
       </div>
-      <div>
-        <h3>{name}</h3>
-      </div>
+      <span className={styles.name}>{name}</span>
     </div>
   );
 }

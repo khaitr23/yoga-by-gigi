@@ -13,6 +13,7 @@ export default function Header() {
   };
 
   return (
+    <div className={styles.headerWrapper}>
     <header className={styles.headerSection}>
       <Link href="/">
         <Image
@@ -73,5 +74,6 @@ export default function Header() {
         onClick={toggleMenu}
       ></div>
     </header>
+    </div>
   );
 }

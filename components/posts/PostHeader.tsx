@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Avatar from "../ui/Avatar";
 import ContentfulImage from "../ui/ContentfulImage";
 import DateTimeComponent from "../ui/DateTimeComponent";
@@ -8,26 +7,27 @@ export default function PostHeader({ post }) {
   const { title, coverImage, author, date } = post.fields;
 
   return (
-    <>
-      <h1 style={{ marginBottom: "0.5rem" }}>{title}</h1>
-      <div id={styles.avatarNameAndDateContainer}>
+    <div>
+      <span className={styles.postLabel}>journal</span>
+      <h1 className={styles.postTitle}>{title}</h1>
+
+      <div className={styles.postMeta}>
         <Avatar name={author.fields.name} picture={author.fields.picture} />
-        <DateTimeComponent dateString={date} options={{}} />
+        <div className={styles.postDate}>
+          <DateTimeComponent dateString={date} options={{}} />
+        </div>
       </div>
-      <div id={styles.coverImageContainer}>
+
+      <div className={styles.coverImageWrapper}>
         <ContentfulImage
           src={coverImage.fields.file.url}
-          alt={`Cover Image for ${title}`}
-          width={0}
-          height={0}
-          sizes="100vw"
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-          }}
+          alt={`Cover image for ${title}`}
+          fill
+          className={styles.coverImage}
+          sizes="(max-width: 800px) 100vw, 68ch"
+          style={{ objectFit: "cover" }}
         />
       </div>
-    </>
+    </div>
   );
 }

@@ -1,70 +1,162 @@
-#blogsTitle {
-  text-align: center;
-  padding-bottom: 45px;
-  margin-bottom: 0;
+/* ─────────────────────────────────────────────
+   Retreats listing page
+   ───────────────────────────────────────────── */
+
+/* ── Page header ── (mirrors Blogs, distinct watermark word) */
+.pageHeader {
+  position: relative;
+  padding: 4.5rem 0 3.5rem;
+  overflow: hidden;
 }
 
-.buttonContainer {
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-  margin-bottom: 0;
+.pageHeader::before {
+  content: 'retreat';
+  position: absolute;
+  bottom: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: clamp(5rem, 16vw, 14rem);
+  font-style: italic;
+  font-family: var(--ff);
+  color: rgba(115, 64, 35, 0.045);
+  white-space: nowrap;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
 }
 
-.buttonContainer p {
-  display: inline;
+.pageHeaderInner {
+  width: 90vw;
+  max-width: 1080px;
+  margin: 0 auto;
+  animation: headerReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.textButton {
-  cursor: pointer;
-  margin: 0 0.5rem;
-  padding: 0.5rem 1rem;
+@keyframes headerReveal {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.activeTextButton {
-  text-decoration: underline;
+.pageLabel {
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 0.38em;
+  text-transform: lowercase;
   color: var(--coloraccent);
+  margin-bottom: 0.6rem;
+  font-family: var(--ff);
 }
 
-.inactiveTextButton {
-  text-decoration: none;
+.pageTitle {
+  font: var(--h1);
+  font-style: italic;
   color: var(--colorsecondary);
-}
-.inactiveTextButton:hover {
-  color: var(--buttonaccent);
+  line-height: 1.05;
+  margin: 0;
 }
 
-.blogGrid {
+.pageSubtitle {
+  font: var(--p);
+  opacity: 0.55;
+  margin: 0.6rem 0 0;
+  font-style: normal;
+}
+
+.pageHeaderRule {
+  width: 90vw;
+  max-width: 1080px;
+  margin: 0 auto;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(115, 64, 35, 0.18) 20%,
+    rgba(115, 64, 35, 0.18) 80%,
+    transparent
+  );
+  margin-bottom: 0;
+}
+
+/* ── Tab bar ── */
+.tabBar {
+  width: 90vw;
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  border-bottom: 1px solid rgba(115, 64, 35, 0.13);
+  margin-bottom: 3.5rem;
+  gap: 0;
+}
+
+.tab {
+  padding: 0.85rem 1.5rem;
+  font-family: var(--ff);
+  font-size: 0.88rem;
+  letter-spacing: 0.05em;
+  color: var(--colorsecondary);
+  opacity: 0.45;
+  border: none;
+  background: none;
+  cursor: pointer;
+  position: relative;
+  transition: opacity 0.25s ease;
+  line-height: 1;
+}
+
+/* Bottom indicator line */
+.tab::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 1.5px;
+  background: var(--colorsecondary);
+  transform: scaleX(0);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tab.activeTab {
+  opacity: 1;
+}
+
+.tab.activeTab::after {
+  transform: scaleX(1);
+}
+
+.tab:hover:not(.activeTab) {
+  opacity: 0.7;
+}
+
+/* ── Grid ── */
+.gridWrapper {
+  width: 90vw;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding-bottom: 6rem;
+}
+
+.grid {
   display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
+  grid-template-columns: 1fr;
+  gap: 2rem;
   list-style: none;
-}
-
-.blogGrid li:hover {
-  scale: 1.02;
-  transition: var(--transition);
-}
-
-.blogListContainer {
-  padding-left: 1rem;
-  padding-right: 1rem;
-  max-width: auto;
+  padding: 0;
+  margin: 0;
 }
 
 @media (min-width: 640px) {
-  .blogGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 2.5rem;
-  }
-
-  .blogListContainer {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
 }
 
 @media (min-width: 1024px) {
-  .blogGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+  .grid { grid-template-columns: repeat(3, 1fr); gap: 2.25rem; }
+}
+
+.emptyState {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 0;
+  opacity: 0.5;
+  font-style: italic;
 }

@@ -1,0 +1,22 @@
+.avatar {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.pictureWrapper {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid rgba(115, 64, 35, 0.15);
+}
+
+.name {
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--colorsecondary);
+  font-family: var(--ff);
+}

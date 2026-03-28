@@ -1,13 +1,141 @@
-/* [slug] css content */
-#avatarNameAndDateContainer {
-  display: flex;
-  margin-bottom: 1rem;
-  justify-content: space-between;
-  align-items: center;
+/* ─────────────────────────────────────────────
+   Blog post page
+   ───────────────────────────────────────────── */
+
+/* ── Back navigation ── */
+.backNav {
+  width: 90vw;
+  max-width: 68ch;
+  margin: 0 auto 2rem;
+  animation: postFadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-#coverImageContainer {
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: var(--colorsecondary);
+  opacity: 0.52;
+  font-family: var(--ff);
+  font-weight: normal;
+  transition: opacity 0.25s ease, gap 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.backLink:hover {
+  opacity: 1;
+  color: var(--colorsecondary);
+  gap: 0.75rem;
+}
+
+.backArrow {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.backLink:hover .backArrow {
+  transform: translateX(-4px);
+}
+
+/* ── Page container ── */
+.postContainer {
+  width: 90vw;
+  max-width: 68ch;
+  margin: 0 auto;
+  padding-bottom: 6rem;
+  animation: postFadeUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+}
+
+@keyframes postFadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Post header ── */
+.postLabel {
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 0.32em;
+  color: var(--coloraccent);
+  text-transform: lowercase;
+  margin-bottom: 0.9rem;
+  font-family: var(--ff);
+}
+
+.postTitle {
+  font-size: 2.4rem;
+  font-style: italic;
+  line-height: 1.15;
+  color: var(--colorsecondary);
+  font-family: var(--ff);
+  font-weight: bold;
+  margin: 0 0 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+/* ── Meta row (author + date) ── */
+.postMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 0;
+  border-top: 1px solid rgba(115, 64, 35, 0.12);
+  border-bottom: 1px solid rgba(115, 64, 35, 0.12);
   margin-bottom: 2rem;
-  max-width: 500px;
-  max-height: auto;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.postDate {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--colorsecondary);
+  opacity: 0.5;
+  text-transform: uppercase;
+  font-family: var(--ff);
+}
+
+/* Flatten DateTimeComponent's inner <time><p> */
+.postDate time,
+.postDate p {
+  margin: 0;
+  font-size: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  color: inherit;
+  opacity: inherit;
+}
+
+/* ── Cover image ── */
+.coverImageWrapper {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  margin-bottom: 2.5rem;
+  width: 100%;
+  animation: coverReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+}
+
+@keyframes coverReveal {
+  from { opacity: 0; transform: scale(1.025); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.coverImage {
+  object-fit: cover;
+}
+
+/* ── Responsive ── */
+@media (max-width: 800px) {
+  .postTitle {
+    font-size: 1.85rem;
+  }
+
+  .postMeta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
 }

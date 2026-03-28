@@ -1,85 +1,128 @@
+import React from "react";
 import ContentfulImage from "../components/ui/ContentfulImage";
 import PreviewAlert from "./ui/PreviewAlert";
+import styles from "../styles/CustomPage.module.css";
 
 export default function CustomPage({ content, preview }) {
   const { sections } = content;
   let nonBreakIndex = 0;
+
   return (
     <main>
       {preview && <PreviewAlert />}
+
       {sections.map((section, index) => {
-        // Logic to reverse image and text in every other div (if the its a break section, then ignore it)
         const isBreak = section.sectionType === "break";
         const isReverse = !isBreak && nonBreakIndex % 2 !== 0;
+        const currentNonBreakIndex = isBreak ? null : nonBreakIndex;
         if (!isBreak) nonBreakIndex++;
+
         const sectionDescriptionText = section.sectionDescription || "";
-        const formatedSectionDescription = sectionDescriptionText.replace(
-          /\n/g,
-          "<br>"
-        );
+        const formattedDescription = sectionDescriptionText.replace(/\n/g, "<br>");
+        const delay = `${index * 0.12}s`;
+
+        /* ── Break / chapter divider ── */
+        if (isBreak) {
+          return (
+            <div
+              key={index}
+              className={styles.breakWrapper}
+              style={{ "--delay": delay } as React.CSSProperties}
+            >
+              <div className={styles.breakInner}>
+                <span className={styles.breakOrnament} aria-hidden="true">
+                  ✦
+                </span>
+                <h2 className={styles.breakTitle}>{section.sectionHeader}</h2>
+                {section.sectionDescription && (
+                  <p
+                    className={styles.breakDescription}
+                    dangerouslySetInnerHTML={{ __html: formattedDescription }}
+                  />
+                )}
+              </div>
+            </div>
+          );
+        }
+
+        const isHero =
+          section.sectionType === "large-title-content-section" && index === 0;
+        const isMedium =
+          section.sectionType === "medium-title-content-section";
+        const hasImage = !!section.sectionImage;
+
+        const innerClass = isHero
+          ? styles.heroSection
+          : hasImage
+          ? `${styles.regularSection} ${isReverse ? styles.reverse : ""}`
+          : "";
 
         return (
           <div
-            className={`section hero ${
-              section.sectionType !== "break" ? "column " : ""
-            }${section.sectionType} ${isReverse ? "reverse " : ""}${
-              section.isTextAboveImage ? "textAboveImage" : "textBelowImage"
-            }`}
             key={index}
+            className={styles.sectionWrapper}
+            style={{ "--delay": delay } as React.CSSProperties}
           >
-            <div>
-              {section.sectionType === "large-title-content-section" && (
-                <>
-                  <h1>{section.sectionHeader}</h1>
-                  <br />
-                </>
-              )}
-              {section.sectionType === "medium-title-content-section" && (
-                <>
-                  <h2>{section.sectionHeader}</h2>
-                  <br />
-                </>
-              )}
-              {section.sectionType === "break" && (
-                <h2>{section.sectionHeader}</h2>
-              )}
-              {section.sectionType === "small-title-content-section" && (
-                <h3>{section.sectionHeader}</h3>
-              )}
+            <div className={innerClass}>
+              {/* ── Text block ── */}
+              <div className={isHero ? styles.heroTextBlock : hasImage ? styles.textBlock : styles.textOnlySection}>
+                {/* Section counter (non-hero only) */}
+                {!isHero && currentNonBreakIndex !== null && (
+                  <span className={styles.sectionNumber} aria-hidden="true">
+                    {String(currentNonBreakIndex + 1).padStart(2, "0")}
+                  </span>
+                )}
 
-              {section.sectionDescription && (
-                <p
-                  dangerouslySetInnerHTML={{
-                    __html: formatedSectionDescription,
-                  }}
-                />
-              )}
+                {isHero && (
+                  <h1 className={styles.heroTitle}>{section.sectionHeader}</h1>
+                )}
+                {!isHero && isMedium && (
+                  <h2 className={styles.sectionTitle}>{section.sectionHeader}</h2>
+                )}
+                {!isHero && !isMedium && (
+                  <h3 className={styles.sectionTitleSmall}>
+                    {section.sectionHeader}
+                  </h3>
+                )}
 
-              {section.ctaButtonText && (
-                <div id="primary-links">
-                  <a href={section.ctaButtonLink} className="button">
-                    {section.ctaButtonText}
-                  </a>
+                {section.sectionDescription && (
+                  <p
+                    className={styles.sectionDescription}
+                    dangerouslySetInnerHTML={{ __html: formattedDescription }}
+                  />
+                )}
+
+                {section.ctaButtonText && (
+                  <div className={styles.ctaWrapper}>
+                    <a
+                      href={section.ctaButtonLink}
+                      className={styles.ctaButton}
+                    >
+                      <span>{section.ctaButtonText}</span>
+                      <span className={styles.ctaArrow} aria-hidden="true">
+                        →
+                      </span>
+                    </a>
+                  </div>
+                )}
+              </div>
+
+              {/* ── Image block ── */}
+              {hasImage && (
+                <div className={isHero ? styles.heroImageBlock : styles.imageBlock}>
+                  <div className={styles.imageFrame}>
+                    <ContentfulImage
+                      src={section.sectionImage.fields.file.url}
+                      alt={section.sectionHeader}
+                      fill
+                      className={styles.sectionImage}
+                      sizes="(max-width: 800px) 100vw, 50vw"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
                 </div>
               )}
             </div>
-
-            {section.sectionImage && (
-              <div className="image-container">
-                <ContentfulImage
-                  src={section.sectionImage.fields.file.url}
-                  alt={section.sectionHeader}
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  style={{
-                    maxWidth: "100%",
-                    height: "auto",
-                    objectFit: "cover",
-                  }}
-                />
-              </div>
-            )}
           </div>
         );
       })}

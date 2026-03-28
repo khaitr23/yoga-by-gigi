@@ -1,108 +1,144 @@
-/* Basic styling for the prose content */
+/* ─────────────────────────────────────────────
+   Prose — blog post reading experience
+   ───────────────────────────────────────────── */
+
 .prose {
-  max-width: 70ch;
+  max-width: 68ch;
   margin-left: auto;
   margin-right: auto;
-  /* line-height: 1.75; */
+  font-family: var(--ff);
   font-size: 1rem;
+  color: var(--colorsecondary);
+  line-height: 1.85;
 }
 
-/* Headings */
-/* .prose h1,
-.prose h2,
-.prose h3,
-.prose h4 {
-} */
-
+/* ── Headings ── */
 .prose h1 {
-  font-size: 2.25em;
+  font-size: 2.2rem;
+  font-style: italic;
+  line-height: 1.15;
   font-weight: bold;
+  margin: 2rem 0 0.75rem;
 }
 
 .prose h2 {
-  font-size: 1.75em;
+  font-size: 1.6rem;
+  font-style: italic;
+  line-height: 1.25;
+  margin: 2rem 0 0.5rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(115, 64, 35, 0.12);
 }
 
 .prose h3 {
-  font-size: 1.5em;
+  font-size: 1.25rem;
+  font-style: italic;
+  margin: 1.5rem 0 0.4rem;
 }
 
 .prose h4 {
-  font-size: 1.25em;
+  font-size: 1.05rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  margin: 1.25rem 0 0.3rem;
 }
 
-/* Paragraphs */
+/* ── Paragraphs ── */
 .prose p {
-  margin-top: 0.2em;
-  margin-bottom: 0.2em;
+  margin-top: 0.9em;
+  margin-bottom: 0.9em;
 }
 
-/* Links */
+/* ── Links ── */
 .prose a {
-  color: #0070f3;
+  color: var(--colorsecondary);
   text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(225, 173, 1, 0.5);
+  transition: text-decoration-color 0.25s ease;
+  font-weight: normal;
+  font-size: inherit;
 }
 
-/* Lists */
+.prose a:hover {
+  text-decoration-color: var(--coloraccent);
+  color: var(--colorsecondary);
+}
+
+/* ── Lists ── */
 .prose ul,
 .prose ol {
-  margin-top: 0.8em;
-  margin-bottom: 0.8em;
+  margin: 0.9em 0;
   padding-left: 1.5em;
 }
 
-.prose ul {
-  list-style-type: disc;
+.prose ul { list-style-type: disc; }
+.prose ol { list-style-type: decimal; }
+
+.prose li {
+  margin-bottom: 0.35em;
 }
 
-.prose ol {
-  list-style-type: decimal;
-}
-
-/* Blockquotes */
+/* ── Blockquote — gold left border ── */
 .prose blockquote {
-  margin: 1.2em 0;
-  padding-left: 1em;
-  border-left: 0.25rem solid #ccc;
+  margin: 1.75em 0;
+  padding: 0.75rem 1.25rem;
+  border-left: 3px solid var(--coloraccent);
+  background: rgba(225, 173, 1, 0.04);
   font-style: italic;
-  color: #555;
+  color: var(--colorsecondary);
+  opacity: 0.88;
 }
 
-/* Code blocks and inline code */
+.prose blockquote p {
+  margin: 0;
+}
+
+/* ── Code ── */
 .prose code {
-  background-color: #f5f5f5;
-  padding: 0.2em 0.4em;
-  border-radius: 0.3em;
-  font-size: 0.95em;
+  background: rgba(115, 64, 35, 0.07);
+  padding: 0.15em 0.4em;
+  border-radius: 2px;
+  font-size: 0.9em;
+  font-family: var(--ff);
 }
 
 .prose pre {
-  background-color: #f0f0f0;
-  padding: 1em;
-  border-radius: 0.5em;
+  background: rgba(115, 64, 35, 0.06);
+  padding: 1.25em;
+  border-radius: 3px;
   overflow-x: auto;
-  font-family: monospace;
-  font-size: 0.9em;
+  font-size: 0.88em;
+  line-height: 1.6;
+  margin: 1.5em 0;
 }
 
-/* Media elements (images, videos, etc.) */
+/* ── Media ── */
 .prose img,
 .prose video {
   max-width: 100%;
+  display: block;
+  margin: 1.5em auto;
 }
 
 .prose figure {
   text-align: center;
+  margin: 1.5em 0;
 }
 
 .prose figcaption {
-  font-size: 0.875em;
-  color: #666;
+  font-size: 0.8em;
+  opacity: 0.55;
+  font-style: italic;
+  margin-top: 0.4em;
 }
 
-/* Horizontal rule */
+/* ── Horizontal rule ── */
 .prose hr {
-  margin: 1.5em 0;
+  margin: 2em auto;
   border: none;
-  border-top: 1px solid #ccc;
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--colorsecondary), transparent);
+  opacity: 0.2;
 }

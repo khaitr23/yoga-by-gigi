@@ -1,0 +1,356 @@
+/* ─────────────────────────────────────────────
+   CustomPage — section layout system
+   ───────────────────────────────────────────── */
+
+/* ── Shared wrapper ── */
+.sectionWrapper {
+  width: 90vw;
+  max-width: 1080px;
+  margin: 0 auto 7rem;
+  animation: sectionReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--delay, 0s) backwards;
+}
+
+@keyframes sectionReveal {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─────────────────────────────────────────────
+   HERO — first large-title section
+   ───────────────────────────────────────────── */
+.heroSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+  padding: 3rem 0 2rem;
+  min-height: 68vh;
+}
+
+/* ── Text side ── */
+.heroTextBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
+  padding-left: 1.75rem;
+}
+
+/* Tall gold accent bar */
+.heroTextBlock::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.4rem;
+  height: 80%;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--coloraccent), transparent);
+}
+
+.heroTitle {
+  font: var(--h1);
+  font-style: italic;
+  color: var(--colorsecondary);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  animation: heroTitleReveal 1s cubic-bezier(0.22, 1, 0.36, 1) 0.05s backwards;
+}
+
+@keyframes heroTitleReveal {
+  from { opacity: 0; transform: translateY(28px) skewY(1.5deg); }
+  to   { opacity: 1; transform: translateY(0) skewY(0deg); }
+}
+
+/* ── Image side ── */
+.heroImageBlock {
+  position: relative;
+  animation: heroImageReveal 1s cubic-bezier(0.22, 1, 0.36, 1) 0.3s backwards;
+}
+
+@keyframes heroImageReveal {
+  from { opacity: 0; transform: translateX(32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Offset gold frame behind the image */
+.heroImageBlock .imageFrame::after {
+  content: '';
+  position: absolute;
+  inset: 12px -12px -12px 12px;
+  border: 1px solid rgba(225, 173, 1, 0.32);
+  pointer-events: none;
+  z-index: -1;
+  transition: inset 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.4s ease;
+}
+
+.sectionWrapper:hover .heroImageBlock .imageFrame::after {
+  inset: 16px -16px -16px 16px;
+  border-color: rgba(225, 173, 1, 0.55);
+}
+
+/* ─────────────────────────────────────────────
+   REGULAR — medium / small title sections
+   ───────────────────────────────────────────── */
+.regularSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.regularSection.reverse .textBlock { order: 2; }
+.regularSection.reverse .imageBlock { order: 1; }
+
+/* Subtle separator line above each regular section */
+.sectionWrapper:not(:first-child) .regularSection::before {
+  content: none;
+}
+
+/* ── Regular text block ── */
+.textBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Section number badge */
+.sectionNumber {
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: var(--coloraccent);
+  opacity: 0.7;
+  font-style: normal;
+  margin-bottom: -0.5rem;
+}
+
+.sectionTitle {
+  font: var(--h2);
+  font-style: italic;
+  color: var(--colorsecondary);
+  line-height: 1.2;
+  position: relative;
+  padding-bottom: 0.85rem;
+}
+
+/* Thin underline that draws on section entry */
+.sectionTitle::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 1.5px;
+  background: var(--coloraccent);
+  opacity: 0.7;
+}
+
+.sectionTitleSmall {
+  font: var(--h3);
+  font-style: italic;
+  color: var(--colorsecondary);
+  line-height: 1.3;
+}
+
+.sectionDescription {
+  font: var(--p);
+  color: var(--colorsecondary);
+  opacity: 0.82;
+  line-height: 1.85;
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────
+   CTA Button — fill-from-bottom effect
+   ───────────────────────────────────────────── */
+.ctaWrapper {
+  margin-top: 0.5rem;
+}
+
+.ctaButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0 1.5rem;
+  height: 48px;
+  border: 1.5px solid var(--colorlinks);
+  font-family: var(--ff);
+  font-weight: bold;
+  font-size: 1rem;
+  color: var(--colorlinks);
+  position: relative;
+  overflow: hidden;
+  transition: color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: pointer;
+  letter-spacing: 0.03em;
+}
+
+.ctaButton::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background: var(--colorsecondary);
+  transition: height 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 0;
+}
+
+.ctaButton:hover::before { height: 100%; }
+.ctaButton:hover {
+  color: var(--colorprimary);
+  border-color: var(--colorsecondary);
+}
+
+.ctaButton span { position: relative; z-index: 1; }
+
+.ctaArrow {
+  transition: transform 0.3s ease;
+}
+
+.ctaButton:hover .ctaArrow { transform: translateX(4px); }
+
+/* ─────────────────────────────────────────────
+   Image frames
+   ───────────────────────────────────────────── */
+.imageBlock {
+  position: relative;
+}
+
+.imageFrame {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+}
+
+.sectionImage {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sectionWrapper:hover .sectionImage { transform: scale(1.04); }
+
+/* Regular section image frame offset */
+.regularSection .imageFrame::after {
+  content: '';
+  position: absolute;
+  inset: 8px -8px -8px 8px;
+  border: 1px solid rgba(225, 173, 1, 0.25);
+  pointer-events: none;
+  z-index: -1;
+  transition: border-color 0.4s ease;
+}
+
+.sectionWrapper:hover .regularSection .imageFrame::after {
+  border-color: rgba(225, 173, 1, 0.5);
+}
+
+.regularSection.reverse .imageFrame::after {
+  inset: 8px 8px -8px -8px;  /* mirror for reversed column */
+}
+
+/* ─────────────────────────────────────────────
+   Text-only section (no image)
+   ───────────────────────────────────────────── */
+.textOnlySection {
+  max-width: 65ch;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-left: 1.5rem;
+  border-left: 2px solid rgba(225, 173, 1, 0.35);
+}
+
+/* ─────────────────────────────────────────────
+   BREAK section — chapter separator
+   ───────────────────────────────────────────── */
+.breakWrapper {
+  text-align: center;
+  padding: 2rem 0 5rem;
+  position: relative;
+}
+
+.breakInner {
+  width: 90vw;
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  animation: sectionReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--delay, 0s) backwards;
+}
+
+/* Thin rules flanking the ornament */
+.breakInner::before,
+.breakInner::after {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--colorsecondary), transparent);
+  opacity: 0.25;
+}
+
+.breakOrnament {
+  font-size: 0.75rem;
+  color: var(--coloraccent);
+  opacity: 0.65;
+  letter-spacing: 0.2em;
+}
+
+.breakTitle {
+  font: var(--h2);
+  font-style: italic;
+  color: var(--colorsecondary);
+  letter-spacing: 0.03em;
+  margin: 0;
+}
+
+.breakDescription {
+  font: var(--p);
+  color: var(--colorsecondary);
+  opacity: 0.6;
+  max-width: 55ch;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────
+   Responsive
+   ───────────────────────────────────────────── */
+@media (max-width: 800px) {
+  .heroSection,
+  .regularSection {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    min-height: unset;
+  }
+
+  /* On mobile hero: text above image */
+  .heroSection { grid-template-areas: "text" "img"; }
+  .heroSection .heroTextBlock { grid-area: text; }
+  .heroSection .heroImageBlock { grid-area: img; }
+
+  .heroTitle { font-size: 2.2rem; line-height: 1.2; }
+
+  .heroTextBlock { padding-left: 1.25rem; }
+
+  .regularSection.reverse .textBlock,
+  .regularSection.reverse .imageBlock { order: unset; }
+
+  .heroImageBlock .imageFrame::after,
+  .regularSection .imageFrame::after {
+    display: none;  /* hide offset frames on mobile */
+  }
+
+  .sectionWrapper { margin-bottom: 4rem; }
+
+  .textOnlySection { padding-left: 1rem; }
+}

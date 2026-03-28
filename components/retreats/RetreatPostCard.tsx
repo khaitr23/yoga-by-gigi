@@ -1,44 +1,50 @@
+import React from "react";
 import Link from "next/link";
 import ContentfulImage from "../ui/ContentfulImage";
 import DateTimeComponent from "../ui/DateTimeComponent";
 import styles from "../../styles/RetreatPostCard.module.css";
 
-export default function RetreatPostCard({ retreat }) {
-  const { title, slug, coverImage, summary, startDate, endDate, location } =
+export default function RetreatPostCard({ retreat, index = 0 }) {
+  const { title, slug, coverImage, summary, startDate, endDate } =
     retreat.fields;
+
   return (
-    <li className={`${styles.postCards}`}>
-      <Link href={`/retreats/${slug}`} aria-label={title}>
-        <div className={styles.postCardImage}>
+    <li
+      className={styles.card}
+      style={{ "--delay": `${index * 0.08}s` } as React.CSSProperties}
+    >
+      <Link href={`/retreats/${slug}`} aria-label={title} className={styles.cardLink}>
+        {/* Image + location badge */}
+        <div className={styles.imageWrapper}>
           <ContentfulImage
             src={coverImage.fields.file.url}
-            alt={`Cover Image for ${title}`}
-            width={0}
-            height={0}
-            sizes="100vw"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
+            alt={`Cover image for ${title}`}
+            fill
+            className={styles.cardImage}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            style={{ objectFit: "cover" }}
           />
         </div>
-        <div className={styles.postCardText}>
-          <h3 className={styles.postCardTitle}>{title}</h3>
-          <div className={styles.dateContainer}>
-            <DateTimeComponent
-              dateString={startDate}
-              options={{}}
-              className={styles.postCardDate}
-            ></DateTimeComponent>{" "}
-            <p style={{ paddingLeft: "1rem", paddingRight: "1rem" }}> to </p>
-            <DateTimeComponent
-              dateString={endDate}
-              options={{}}
-              className={styles.postCardDate}
-            ></DateTimeComponent>
+
+        {/* Body */}
+        <div className={styles.cardBody}>
+          <h3 className={styles.cardTitle}>{title}</h3>
+
+          {/* Date range */}
+          <div className={styles.dateRange}>
+            <DateTimeComponent dateString={startDate} options={{}} />
+            <span className={styles.dateSep}>—</span>
+            <DateTimeComponent dateString={endDate} options={{}} />
           </div>
-          <p className={styles.postCardSummary}>{summary}</p>
+
+          {summary && (
+            <p className={styles.cardSummary}>{summary}</p>
+          )}
+
+          <span className={styles.readMore}>
+            view details{" "}
+            <span className={styles.readMoreArrow} aria-hidden="true">→</span>
+          </span>
         </div>
       </Link>
     </li>

@@ -1,70 +1,170 @@
 .footer {
-  /* margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 0px;
-  text-align: center;
-  justify-content: space-between;
-  bottom: 0;
   width: 100%;
-  background-color: #ebeae9; */
-  max-width: 100vw;
-  width: auto;
-  margin-bottom: 0px;
-  background-color: #ebeae9;
+  background-color: #e8e0d4;
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(115, 64, 35, 0.09) 0%, transparent 65%),
+    radial-gradient(circle, rgba(115, 64, 35, 0.035) 1px, transparent 1px);
+  background-size: auto, 28px 28px;
+  border-top: 1px solid rgba(115, 64, 35, 0.18);
+  padding: 3rem 0 2rem;
+  margin-top: auto;
 }
 
-.socialIcons {
-  margin-top: 5px;
+.inner {
+  width: 90vw;
+  max-width: 1080px;
+  margin: 0 auto;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-}
-.socialIcons Image {
-  width: 20px;
-  cursor: pointer;
-}
-.socialIconImage:hover {
-  scale: 1.15;
-  transition: var(--transition);
+  gap: 1.75rem;
+  text-align: center;
 }
 
-.vl {
-  border-left: 2px solid #333;
-  height: auto;
-  top: 0;
-  margin-left: auto;
-  min-height: 100%;
+/* ── Brand ── */
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
 }
+
+.brandName {
+  font: var(--h3);
+  color: var(--colorsecondary);
+  letter-spacing: 0.1em;
+  font-style: italic;
+  margin: 0;
+}
+
+.tagline {
+  font-size: 0.75rem;
+  letter-spacing: 0.28em;
+  color: var(--colorsecondary);
+  opacity: 0.5;
+  text-transform: lowercase;
+  margin: 0;
+}
+
+/* ── Breathing rule ── */
+.rule {
+  display: block;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--colorsecondary), transparent);
+  opacity: 0.3;
+  animation: ruleBreathe 5s ease-in-out infinite;
+}
+
+@keyframes ruleBreathe {
+  0%, 100% { width: 52px; opacity: 0.2; }
+  50%       { width: 96px; opacity: 0.45; }
+}
+
+/* ── Contacts ── */
 .contacts {
   display: flex;
-  gap: 40px;
-  justify-content: space-between;
-  text-align: center;
-  align-self: center;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 100%;
-  margin-bottom: 15px;
-}
-.connectMe {
-  justify-content: space-between;
-  margin: auto;
+  flex-wrap: wrap;
+  gap: 0.5rem 2rem;
+  justify-content: center;
+  align-items: flex-start;
 }
 
+.contactItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  color: var(--colorsecondary);
+  font-size: 0.95rem;
+  font-weight: normal;
+  font-family: var(--ff);
+  opacity: 0.8;
+  transition: opacity var(--transition), color var(--transition);
+}
+
+.contactItem:hover {
+  opacity: 1;
+  color: var(--colorsecondary);
+}
+
+.contactLabel {
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  opacity: 0.5;
+  text-transform: lowercase;
+}
+
+.dot {
+  color: var(--colorsecondary);
+  opacity: 0.22;
+  font-size: 1.4rem;
+  line-height: 2;
+  align-self: center;
+}
+
+/* ── Bottom row ── */
+.bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(115, 64, 35, 0.1);
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.social {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+  transition: opacity var(--transition), transform var(--transition);
+}
+
+.socialLink:hover {
+  opacity: 1;
+  transform: translateY(-3px);
+}
+
+.socialIcon {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.copyright {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--colorsecondary);
+  opacity: 0.42;
+  margin: 0;
+  margin-left: auto;
+}
+
+/* ── Mobile ── */
 @media (max-width: 800px) {
-  .footer {
-    flex-direction: column;
-  }
   .contacts {
-    justify-content: center;
     flex-direction: column;
+    align-items: center;
+    gap: 1.1rem;
   }
-  .connectMe {
-    margin-left: auto;
-    margin-right: auto;
-    justify-content: center;
-  }
-  .vl {
+
+  .dot {
     display: none;
+  }
+
+  .bottom {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .copyright {
+    margin-left: 0;
   }
 }

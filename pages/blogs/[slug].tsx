@@ -6,31 +6,36 @@ import Skeleton from "../../components/ui/Skeleton";
 import PostBody from "../../components/posts/PostBody";
 import PreviewAlert from "../../components/ui/PreviewAlert";
 import proseStyle from "../../styles/prose.module.css";
+import postStyle from "../../styles/Post.module.css";
 import Link from "next/link";
 
 export default function Post({ post, preview }) {
   const router = useRouter();
+
   return (
-    <main className="section">
+    <main>
       {preview && <PreviewAlert />}
-      <div className="container">
-        <h2>
-          <Link href="/blogs">←Back to Blogs</Link>
-        </h2>
-        <br />
-        <article
-          style={{ marginLeft: "auto", marginRight: "auto" }}
-          className={proseStyle.prose}
-        >
-          {router.isFallback ? (
-            <Skeleton />
-          ) : (
-            <>
-              <PostHeader post={post} />
+
+      {/* Back navigation */}
+      <nav className={postStyle.backNav}>
+        <Link href="/blogs" className={postStyle.backLink}>
+          <span className={postStyle.backArrow} aria-hidden="true">←</span>
+          Back to Blogs
+        </Link>
+      </nav>
+
+      {/* Post content */}
+      <div className={postStyle.postContainer}>
+        {router.isFallback ? (
+          <Skeleton />
+        ) : (
+          <>
+            <PostHeader post={post} />
+            <article className={proseStyle.prose}>
               <PostBody post={post} />
-            </>
-          )}
-        </article>
+            </article>
+          </>
+        )}
       </div>
     </main>
   );
@@ -68,7 +73,7 @@ export const getStaticProps: GetStaticProps = async ({
 export const getStaticPaths: GetStaticPaths = async () => {
   const response = await client.getEntries({ content_type: "post" });
   const paths = response.items.map((item) => ({
-    params: { slug: item.fields.slug },
+    params: { slug: item.fields.slug as string },
   }));
 
   return {
