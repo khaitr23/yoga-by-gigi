@@ -4,7 +4,6 @@ import PreviewAlert from "../../components/ui/PreviewAlert";
 import Skeleton from "../../components/ui/Skeleton";
 import PostBody from "../../components/posts/PostBody";
 import RetreatHeader from "../../components/retreats/RetreatHeader";
-import MapEmbed from "../../components/ui/MapEmbed";
 import proseStyle from "../../styles/prose.module.css";
 import Link from "next/link";
 
@@ -28,16 +27,6 @@ export default function Retreat({ retreat, preview }) {
             <>
               <RetreatHeader retreat={retreat} />
               <PostBody post={retreat} />
-              <div
-                className="mapContainer"
-                style={{
-                  marginTop: "2rem",
-                  textDecoration: "underline",
-                }}
-              >
-                <p style={{ textAlign: "center" }}>Location</p>
-                <MapEmbed retreat={retreat} />
-              </div>
             </>
           )}
         </article>
@@ -67,8 +56,8 @@ export async function getStaticProps({ params, preview = false }) {
     props: {
       retreat: response?.items?.[0],
       preview,
-      revalidate: 60,
     },
+    revalidate: 60,
   };
 }
 
