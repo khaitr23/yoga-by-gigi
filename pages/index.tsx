@@ -49,6 +49,7 @@ export async function getStaticProps({ preview = false }) {
   };
 
   return {
-    props: { content, preview, revalidate: 60 },
+    props: { content, preview },
+    revalidate: 60,
   };
 }

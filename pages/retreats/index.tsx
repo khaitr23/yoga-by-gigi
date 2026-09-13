@@ -79,6 +79,7 @@ export const getStaticProps: GetStaticProps = async () => {
     a.fields.startDate < b.fields.startDate ? 1 : -1
   );
   return {
-    props: { retreats: sortedRetreats, revalidate: 60 },
+    props: { retreats: sortedRetreats },
+    revalidate: 60,
   };
 };
