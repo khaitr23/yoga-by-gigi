@@ -47,12 +47,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         fields.coverImage = { "en-US": { sys: { type: "Link", linkType: "Asset", id: assetId } } };
       }
       await updateAndPublishEntry(id, fields);
+      await Promise.allSettled([
+        res.revalidate("/blogs"),
+        res.revalidate(`/blogs/${slug}`),
+      ]);
       return res.status(200).json({ ok: true });
     }
 
     if (req.method === "DELETE") {
+      const entry = await getEntry(id);
+      const slug = (entry.fields.slug as any)?.["en-US"] ?? "";
       try { await unpublishEntry(id); } catch {}
       await deleteEntry(id);
+      await Promise.allSettled([
+        res.revalidate("/blogs"),
+        ...(slug ? [res.revalidate(`/blogs/${slug}`)] : []),
+      ]);
       return res.status(200).json({ ok: true });
     }
 

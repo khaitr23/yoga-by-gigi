@@ -49,6 +49,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
       const entry = await createEntry("post", fields);
       const published = await publishEntry(entry);
+      await Promise.allSettled([
+        res.revalidate("/blogs"),
+        res.revalidate(`/blogs/${slug}`),
+      ]);
       return res.status(201).json({ id: published.sys.id });
     }
 

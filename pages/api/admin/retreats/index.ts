@@ -50,6 +50,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
       const entry = await createEntry("retreat", fields);
       const published = await publishEntry(entry);
+      await Promise.allSettled([
+        res.revalidate("/retreats"),
+        res.revalidate(`/retreats/${slug}`),
+      ]);
       return res.status(201).json({ id: published.sys.id });
     }
 

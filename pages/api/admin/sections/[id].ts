@@ -24,6 +24,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     await updateAndPublishEntry(id, fields);
+    await Promise.allSettled([
+      res.revalidate("/"),
+      res.revalidate("/about"),
+      res.revalidate("/booking"),
+    ]);
     return res.status(200).json({ ok: true });
   } catch (err: any) {
     console.error("[sections/id]", err);
