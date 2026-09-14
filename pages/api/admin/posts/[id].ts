@@ -9,6 +9,8 @@ import {
 } from "../../../../lib/contentful/management";
 import { markdownToRichText, richTextToMarkdown } from "../../../../lib/contentful/richtext";
 
+export const maxDuration = 60;
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!isAuthenticated(req)) return res.status(401).json({ error: "Unauthorized" });
 
@@ -46,11 +48,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (assetId) {
         fields.coverImage = { "en-US": { sys: { type: "Link", linkType: "Asset", id: assetId } } };
       }
+      console.log("[posts/id] updating", id, "assetId:", assetId);
       await updateAndPublishEntry(id, fields);
-      await Promise.allSettled([
+      await new Promise((r) => setTimeout(r, 3000));
+      const results = await Promise.allSettled([
         res.revalidate("/blogs"),
         res.revalidate(`/blogs/${slug}`),
       ]);
+      results.forEach((r, i) => {
+        if (r.status === "rejected") console.error("[posts/id] revalidate failed for", ["/blogs", `/blogs/${slug}`][i], r.reason);
+      });
       return res.status(200).json({ ok: true });
     }
 
@@ -59,6 +66,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const slug = (entry.fields.slug as any)?.["en-US"] ?? "";
       try { await unpublishEntry(id); } catch {}
       await deleteEntry(id);
+      await new Promise((r) => setTimeout(r, 2000));
       await Promise.allSettled([
         res.revalidate("/blogs"),
         ...(slug ? [res.revalidate(`/blogs/${slug}`)] : []),

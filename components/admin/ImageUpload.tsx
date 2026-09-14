@@ -55,7 +55,11 @@ export default function ImageUpload({ currentUrl, onUploaded }: Props) {
 
   async function handleFile(file: File) {
     setUploaded(false);
-    setProgress("reading file…");
+    // Use a short blob URL for the local preview — data URLs over a few MB
+    // can fail to render inline in <img> in some browsers.
+    const localPreview = URL.createObjectURL(file);
+    setPreview(localPreview);
+    setProgress("preparing image…");
     try {
       let base64: string;
       let contentType: string;
@@ -69,7 +73,6 @@ export default function ImageUpload({ currentUrl, onUploaded }: Props) {
         base64 = await readAsDataUrl(file);
         contentType = file.type || "application/octet-stream";
       }
-      setPreview(base64);
       setProgress("uploading to Contentful (may take up to 30s)…");
       const res = await fetch("/api/admin/assets", {
         method: "POST",
@@ -89,6 +92,9 @@ export default function ImageUpload({ currentUrl, onUploaded }: Props) {
       }
       if (!res.ok) throw new Error(data.error || `upload failed (HTTP ${res.status})`);
       if (!data.id || !data.url) throw new Error("upload response missing id or url");
+      // Switch to the real Contentful URL now that upload succeeded, then free the blob.
+      setPreview(data.url);
+      URL.revokeObjectURL(localPreview);
       setProgress("");
       setUploaded(true);
       onUploaded(data.id, data.url);

@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { isAuthenticated } from "../../../../lib/admin/auth";
 import { getEntry, updateAndPublishEntry } from "../../../../lib/contentful/management";
 
+export const maxDuration = 60;
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!isAuthenticated(req)) return res.status(401).json({ error: "Unauthorized" });
   if (req.method !== "PUT") return res.status(405).end();
@@ -23,12 +25,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       fields.sectionImage = { "en-US": { sys: { type: "Link", linkType: "Asset", id: assetId } } };
     }
 
+    console.log("[sections/id] updating", id, "assetId:", assetId);
     await updateAndPublishEntry(id, fields);
-    await Promise.allSettled([
+
+    // Let Contentful's CDN propagate the publish before we regenerate the page,
+    // otherwise the ISR rebuild reads stale data and the homepage still shows the old image.
+    await new Promise((r) => setTimeout(r, 3000));
+
+    const results = await Promise.allSettled([
       res.revalidate("/"),
       res.revalidate("/about"),
       res.revalidate("/booking"),
     ]);
+    results.forEach((r, i) => {
+      if (r.status === "rejected") console.error("[sections/id] revalidate failed for", ["/", "/about", "/booking"][i], r.reason);
+    });
     return res.status(200).json({ ok: true });
   } catch (err: any) {
     console.error("[sections/id]", err);
