@@ -11,54 +11,85 @@ export default function ImageUpload({ currentUrl, onUploaded }: Props) {
   const [preview, setPreview] = useState<string | null>(currentUrl ?? null);
   const [progress, setProgress] = useState("");
 
-  async function compressImage(file: File): Promise<string> {
+  async function compressImage(
+    file: File
+  ): Promise<{ base64: string; contentType: string }> {
     return new Promise((resolve, reject) => {
       const img = new Image();
       const objectUrl = URL.createObjectURL(file);
       img.onload = () => {
         URL.revokeObjectURL(objectUrl);
-        const MAX = 1800;
-        let { width, height } = img;
-        if (width > MAX || height > MAX) {
-          if (width > height) { height = Math.round((height * MAX) / width); width = MAX; }
-          else { width = Math.round((width * MAX) / height); height = MAX; }
+        try {
+          const MAX = 1800;
+          let { width, height } = img;
+          if (width > MAX || height > MAX) {
+            if (width > height) { height = Math.round((height * MAX) / width); width = MAX; }
+            else { width = Math.round((width * MAX) / height); height = MAX; }
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          canvas.getContext("2d")!.drawImage(img, 0, 0, width, height);
+          resolve({ base64: canvas.toDataURL("image/jpeg", 0.82), contentType: "image/jpeg" });
+        } catch (e: any) {
+          reject(new Error(e?.message || "Image compression failed"));
         }
-        const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
-        canvas.getContext("2d")!.drawImage(img, 0, 0, width, height);
-        resolve(canvas.toDataURL("image/jpeg", 0.82));
       };
-      img.onerror = reject;
+      img.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        reject(new Error("Browser could not decode this image (unsupported color profile or format)"));
+      };
       img.src = objectUrl;
+    });
+  }
+
+  function readAsDataUrl(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(new Error("Failed to read file"));
+      reader.readAsDataURL(file);
     });
   }
 
   async function handleFile(file: File) {
     setProgress("reading file…");
     try {
-      const base64 = await compressImage(file);
+      let base64: string;
+      let contentType: string;
+      let fileName = file.name;
+      try {
+        const compressed = await compressImage(file);
+        base64 = compressed.base64;
+        contentType = compressed.contentType;
+      } catch (compressErr) {
+        // Fallback: send original file if compression fails
+        console.warn("compression failed, uploading raw file:", compressErr);
+        base64 = await readAsDataUrl(file);
+        contentType = file.type || "application/octet-stream";
+      }
       setPreview(base64);
       setProgress("uploading…");
       const res = await fetch("/api/admin/assets", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ base64, fileName: file.name, contentType: "image/jpeg" }),
+        body: JSON.stringify({ base64, fileName, contentType }),
       });
       const text = await res.text();
       let data: any = {};
       try { data = JSON.parse(text); } catch {
         throw new Error(
           text.toLowerCase().includes("entity too large")
-            ? "Image is too large even after compression. Please use a smaller image."
+            ? "Image is too large. Please use a smaller image."
             : text || "Upload failed"
         );
       }
-      if (!res.ok) throw new Error(data.error ?? "upload failed");
+      if (!res.ok) throw new Error(data.error || "upload failed");
       setProgress("");
       onUploaded(data.id, data.url);
     } catch (err: any) {
-      setProgress("error: " + err.message);
+      const msg = err?.message || (typeof err === "string" ? err : "Unknown upload error");
+      setProgress("error: " + msg);
     }
   }
 
