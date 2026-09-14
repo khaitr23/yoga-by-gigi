@@ -26,7 +26,8 @@ export async function getStaticProps({ preview = false }) {
     },
   ];
 
-  const safeSections = sections.map((section) => ({
+  // Unpublished (hidden) linked entries come back without `fields` — skip them.
+  const safeSections = sections.filter((s: any) => s?.fields || s?.sectionType).map((section) => ({
     sectionHeader:
       section?.fields?.sectionHeader || section?.sectionHeader || null,
     sectionDescription:
