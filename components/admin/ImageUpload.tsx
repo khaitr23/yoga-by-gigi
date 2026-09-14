@@ -92,9 +92,9 @@ export default function ImageUpload({ currentUrl, onUploaded }: Props) {
       }
       if (!res.ok) throw new Error(data.error || `upload failed (HTTP ${res.status})`);
       if (!data.id || !data.url) throw new Error("upload response missing id or url");
-      // Switch to the real Contentful URL now that upload succeeded, then free the blob.
-      setPreview(data.url);
-      URL.revokeObjectURL(localPreview);
+      console.log("[ImageUpload] upload success. Contentful URL:", data.url);
+      // Keep showing the local blob URL — the freshly-published Contentful CDN URL
+      // often 404s for a few seconds before the CDN catches up.
       setProgress("");
       setUploaded(true);
       onUploaded(data.id, data.url);
@@ -114,7 +114,13 @@ export default function ImageUpload({ currentUrl, onUploaded }: Props) {
       >
         {preview ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={preview} alt="preview" />
+          <img
+            src={preview}
+            alt="preview"
+            onError={(e) => {
+              console.error("[ImageUpload] img failed to load:", (e.target as HTMLImageElement).src);
+            }}
+          />
         ) : (
           <span className={styles.imagePlaceholder}>click to upload image</span>
         )}

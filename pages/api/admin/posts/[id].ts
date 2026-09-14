@@ -49,8 +49,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         fields.coverImage = { "en-US": { sys: { type: "Link", linkType: "Asset", id: assetId } } };
       }
       console.log("[posts/id] updating", id, "assetId:", assetId);
-      await updateAndPublishEntry(id, fields);
-      await new Promise((r) => setTimeout(r, 3000));
+      await updateAndPublishEntry(id, fields, existing);
+      await new Promise((r) => setTimeout(r, 5000));
       const results = await Promise.allSettled([
         res.revalidate("/blogs"),
         res.revalidate(`/blogs/${slug}`),

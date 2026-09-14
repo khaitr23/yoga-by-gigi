@@ -30,12 +30,16 @@ export async function createEntry(contentTypeId: string, fields: Record<string, 
   return c.entry.create({ ...spaceEnv(), contentTypeId }, { fields });
 }
 
-export async function updateAndPublishEntry(entryId: string, fields: Record<string, any>) {
+export async function updateAndPublishEntry(
+  entryId: string,
+  fields: Record<string, any>,
+  existing?: any
+) {
   const c = getClient();
-  const existing = await c.entry.get({ ...spaceEnv(), entryId });
+  const base = existing ?? (await c.entry.get({ ...spaceEnv(), entryId }));
   const updated = await c.entry.update(
     { ...spaceEnv(), entryId },
-    { ...existing, fields }
+    { ...base, fields }
   );
   return c.entry.publish({ ...spaceEnv(), entryId }, updated);
 }

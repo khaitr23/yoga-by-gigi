@@ -26,11 +26,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     console.log("[sections/id] updating", id, "assetId:", assetId);
-    await updateAndPublishEntry(id, fields);
+    await updateAndPublishEntry(id, fields, existing);
 
     // Let Contentful's CDN propagate the publish before we regenerate the page,
     // otherwise the ISR rebuild reads stale data and the homepage still shows the old image.
-    await new Promise((r) => setTimeout(r, 3000));
+    await new Promise((r) => setTimeout(r, 5000));
 
     const results = await Promise.allSettled([
       res.revalidate("/"),
