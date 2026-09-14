@@ -6,9 +6,17 @@ interface Props {
   onUploaded: (assetId: string, url: string) => void;
 }
 
+// Force Contentful to re-encode as browser-safe JPEG (fixes CMYK / exotic color profiles).
+function normalizeContentfulUrl(url: string | null | undefined): string | null {
+  if (!url) return null;
+  if (url.startsWith("blob:") || url.startsWith("data:")) return url;
+  if (!url.includes("images.ctfassets.net") && !url.includes("images.contentful.com")) return url;
+  return url.includes("?") ? `${url}&fm=jpg&fl=progressive&w=1200&q=80` : `${url}?fm=jpg&fl=progressive&w=1200&q=80`;
+}
+
 export default function ImageUpload({ currentUrl, onUploaded }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [preview, setPreview] = useState<string | null>(currentUrl ?? null);
+  const [preview, setPreview] = useState<string | null>(normalizeContentfulUrl(currentUrl));
   const [progress, setProgress] = useState("");
   const [uploaded, setUploaded] = useState(false);
 
@@ -93,8 +101,12 @@ export default function ImageUpload({ currentUrl, onUploaded }: Props) {
       if (!res.ok) throw new Error(data.error || `upload failed (HTTP ${res.status})`);
       if (!data.id || !data.url) throw new Error("upload response missing id or url");
       console.log("[ImageUpload] upload success. Contentful URL:", data.url);
-      // Keep showing the local blob URL — the freshly-published Contentful CDN URL
-      // often 404s for a few seconds before the CDN catches up.
+      // Wait briefly for Contentful CDN to propagate, then switch to the
+      // normalized URL (?fm=jpg forces re-encode so exotic color profiles render).
+      setProgress("finalizing…");
+      await new Promise((r) => setTimeout(r, 2500));
+      setPreview(normalizeContentfulUrl(data.url));
+      URL.revokeObjectURL(localPreview);
       setProgress("");
       setUploaded(true);
       onUploaded(data.id, data.url);
