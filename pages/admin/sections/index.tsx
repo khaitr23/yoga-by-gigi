@@ -122,6 +122,31 @@ export default function AdminSectionsPage() {
     }
   }
 
+  async function handleMove(index: number, direction: -1 | 1) {
+    const target = index + direction;
+    if (target < 0 || target >= sections.length) return;
+
+    // Optimistic reorder — swap immediately in local state, then persist.
+    const reordered = [...sections];
+    [reordered[index], reordered[target]] = [reordered[target], reordered[index]];
+    setSections(reordered);
+
+    try {
+      const res = await fetch("/api/admin/sections/order", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: reordered.map((s) => s.id) }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "reorder failed");
+      flash("success", "Order updated.");
+    } catch (err: any) {
+      flash("error", err.message);
+      // Roll back on failure
+      await load();
+    }
+  }
+
   async function handleToggleVisibility(section: SectionState) {
     const nextVisible = !section.published;
     update(section.id, { busy: true, error: "" });
@@ -299,6 +324,33 @@ export default function AdminSectionsPage() {
                   </span>
                 )}
               </span>
+            </div>
+            <div
+              style={{ display: "flex", gap: "0.25rem", marginRight: "0.5rem" }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                className={styles.btn}
+                style={{ padding: "0.2rem 0.55rem", fontSize: "0.9rem" }}
+                onClick={() => handleMove(i, -1)}
+                disabled={i === 0}
+                aria-label="move up"
+                title="move up"
+              >
+                ↑
+              </button>
+              <button
+                type="button"
+                className={styles.btn}
+                style={{ padding: "0.2rem 0.55rem", fontSize: "0.9rem" }}
+                onClick={() => handleMove(i, 1)}
+                disabled={i === sections.length - 1}
+                aria-label="move down"
+                title="move down"
+              >
+                ↓
+              </button>
             </div>
             <span className={`${styles.sectionCardChevron}${section.open ? " " + styles.open : ""}`}>
               ▾
