@@ -10,6 +10,7 @@ export default function ImageUpload({ currentUrl, onUploaded }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(currentUrl ?? null);
   const [progress, setProgress] = useState("");
+  const [uploaded, setUploaded] = useState(false);
 
   async function compressImage(
     file: File
@@ -53,6 +54,7 @@ export default function ImageUpload({ currentUrl, onUploaded }: Props) {
   }
 
   async function handleFile(file: File) {
+    setUploaded(false);
     setProgress("reading file…");
     try {
       let base64: string;
@@ -63,13 +65,12 @@ export default function ImageUpload({ currentUrl, onUploaded }: Props) {
         base64 = compressed.base64;
         contentType = compressed.contentType;
       } catch (compressErr) {
-        // Fallback: send original file if compression fails
         console.warn("compression failed, uploading raw file:", compressErr);
         base64 = await readAsDataUrl(file);
         contentType = file.type || "application/octet-stream";
       }
       setPreview(base64);
-      setProgress("uploading…");
+      setProgress("uploading to Contentful (may take up to 30s)…");
       const res = await fetch("/api/admin/assets", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -81,14 +82,19 @@ export default function ImageUpload({ currentUrl, onUploaded }: Props) {
         throw new Error(
           text.toLowerCase().includes("entity too large")
             ? "Image is too large. Please use a smaller image."
-            : text || "Upload failed"
+            : text.toLowerCase().includes("timeout") || text.includes("504")
+              ? "Upload timed out. Please try again."
+              : text || "Upload failed (empty response)"
         );
       }
-      if (!res.ok) throw new Error(data.error || "upload failed");
+      if (!res.ok) throw new Error(data.error || `upload failed (HTTP ${res.status})`);
+      if (!data.id || !data.url) throw new Error("upload response missing id or url");
       setProgress("");
+      setUploaded(true);
       onUploaded(data.id, data.url);
     } catch (err: any) {
       const msg = err?.message || (typeof err === "string" ? err : "Unknown upload error");
+      console.error("[ImageUpload]", err);
       setProgress("error: " + msg);
     }
   }
@@ -108,6 +114,11 @@ export default function ImageUpload({ currentUrl, onUploaded }: Props) {
         )}
       </div>
       {progress && <span className={styles.uploadProgress}>{progress}</span>}
+      {uploaded && (
+        <span className={styles.uploadProgress} style={{ color: "green" }}>
+          ✓ uploaded — now click <strong>save &amp; publish</strong> to apply it to the page
+        </span>
+      )}
       <input
         ref={inputRef}
         type="file"

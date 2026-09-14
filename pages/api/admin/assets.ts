@@ -3,6 +3,7 @@ import { isAuthenticated } from "../../../lib/admin/auth";
 import { uploadAsset } from "../../../lib/contentful/management";
 
 export const config = { api: { bodyParser: { sizeLimit: "10mb" } } };
+export const maxDuration = 60;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!isAuthenticated(req)) return res.status(401).json({ error: "Unauthorized" });
@@ -17,11 +18,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Strip "data:...;base64," prefix if present
     const raw = base64.includes(",") ? base64.split(",")[1] : base64;
     const buffer = Buffer.from(raw, "base64");
+    console.log("[assets] uploading", { fileName, contentType, sizeKB: Math.round(buffer.length / 1024) });
 
     const { id, url } = await uploadAsset(buffer, fileName, contentType);
+    console.log("[assets] uploaded", { id, url });
     return res.status(200).json({ id, url });
   } catch (err: any) {
-    console.error("[assets]", err);
-    return res.status(500).json({ error: err.message ?? "Upload failed" });
+    console.error("[assets] error:", err?.message, err?.details ?? err);
+    return res.status(500).json({ error: err?.message || "Upload failed" });
   }
 }
