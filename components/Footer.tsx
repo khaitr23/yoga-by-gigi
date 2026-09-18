@@ -10,7 +10,7 @@ export default function Footer({ siteName = DEFAULT_SITE_NAME }: { siteName?: st
       <div className={styles.inner}>
         <div className={styles.brand}>
           <p className={styles.brandName}>{siteName}</p>
-          <p className={styles.tagline}>breathe · move · be</p>
+          <p className={styles.tagline}>move. heal. live naturally</p>
         </div>
 
         <span className={styles.rule} aria-hidden="true" />
@@ -34,10 +34,22 @@ export default function Footer({ siteName = DEFAULT_SITE_NAME }: { siteName?: st
 
         <div className={styles.bottom}>
           <div className={styles.social}>
-            <a href="#" className={styles.socialLink} aria-label="Facebook">
+            <a
+              href="https://www.facebook.com/SongbyGigi"
+              className={styles.socialLink}
+              aria-label="Facebook"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Image className={styles.socialIcon} src={fbIcon} alt="" width={20} height={20} />
             </a>
-            <a href="#" className={styles.socialLink} aria-label="Instagram">
+            <a
+              href="https://www.instagram.com/songbygigi"
+              className={styles.socialLink}
+              aria-label="Instagram"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Image className={styles.socialIcon} src={instaIcon} alt="" width={20} height={20} />
             </a>
           </div>

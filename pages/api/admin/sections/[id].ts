@@ -7,9 +7,12 @@ import {
   unpublishEntry,
   deleteEntry,
   ensureSectionFields,
+} from "../../../../lib/contentful/management";
+import {
   IMAGE_POSITIONS,
   TEXT_ALIGNMENTS,
-} from "../../../../lib/contentful/management";
+  SECTION_TYPES,
+} from "../../../../lib/sections";
 
 export const maxDuration = 60;
 
@@ -42,6 +45,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         additionalImageIds,
         imagePosition,
         textAlign,
+        sectionType,
       } = req.body;
 
       const fields: any = {
@@ -49,6 +53,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         sectionHeader: { "en-US": sectionHeader },
         sectionDescription: { "en-US": sectionDescription },
       };
+      if (sectionType !== undefined) {
+        if (!SECTION_TYPES.includes(sectionType)) {
+          return res.status(400).json({
+            error: `sectionType must be one of: ${SECTION_TYPES.join(", ")}`,
+          });
+        }
+        fields.sectionType = { "en-US": sectionType };
+      }
       if (ctaButtonText !== undefined) fields.ctaButtonText = { "en-US": ctaButtonText };
       if (ctaButtonLink !== undefined) fields.ctaButtonLink = { "en-US": ctaButtonLink };
       if (assetId) {
@@ -81,7 +93,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         };
       }
 
-      console.log("[sections/id] updating", id, "assetId:", assetId, "extras:", additionalImageIds?.length, "imagePosition:", imagePosition);
+      console.log("[sections/id] updating", id, "assetId:", assetId, "extras:", additionalImageIds?.length, "imagePosition:", imagePosition, "sectionType:", sectionType);
       await updateAndPublishEntry(id, fields, existing);
       await revalidateAll(res);
       return res.status(200).json({ ok: true });

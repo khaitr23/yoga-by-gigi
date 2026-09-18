@@ -80,8 +80,11 @@ export default function CustomPage({ content, preview }) {
         const formattedDescription = sectionDescriptionText.replace(/\n/g, "<br>");
         const delay = `${index * 0.12}s`;
 
-        const isHero =
-          section.sectionType === "large-title-content-section" && index === 0;
+        const isLarge =
+          section.sectionType === "large-title-content-section";
+        // The full hero treatment is reserved for a large title opening the page;
+        // a large title further down keeps the large heading, normal layout.
+        const isHero = isLarge && index === 0;
         const isMedium =
           section.sectionType === "medium-title-content-section";
 
@@ -170,10 +173,15 @@ export default function CustomPage({ content, preview }) {
                 {isHero && (
                   <h1 className={styles.heroTitle}>{section.sectionHeader}</h1>
                 )}
+                {!isHero && isLarge && (
+                  <h2 className={styles.sectionTitleLarge}>
+                    {section.sectionHeader}
+                  </h2>
+                )}
                 {!isHero && isMedium && (
                   <h2 className={styles.sectionTitle}>{section.sectionHeader}</h2>
                 )}
-                {!isHero && !isMedium && (
+                {!isHero && !isLarge && !isMedium && (
                   // --chars lets the stylesheet size this to fit one line
                   <h3
                     className={styles.sectionTitleSmall}

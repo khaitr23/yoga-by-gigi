@@ -1,8 +1,6 @@
 import { createClient } from "contentful-management";
 import { IMAGE_POSITIONS, TEXT_ALIGNMENTS } from "../sections";
 
-export { IMAGE_POSITIONS, TEXT_ALIGNMENTS };
-
 function getClient() {
   return createClient({
     accessToken: process.env.CONTENTFUL_MANAGEMENT_TOKEN!,

@@ -3,6 +3,19 @@
  * Imported by both the renderer and the admin API so the two can't drift.
  */
 
+/**
+ * The section layouts, matching the `in` validation on the Contentful field.
+ * Changing this list means changing that validation too.
+ */
+export const SECTION_TYPE_OPTIONS = [
+  { value: "large-title-content-section", label: "Large title (hero-style)" },
+  { value: "medium-title-content-section", label: "Medium title" },
+  { value: "small-title-content-section", label: "Small title" },
+  { value: "break", label: "Break (chapter divider)" },
+];
+
+export const SECTION_TYPES = SECTION_TYPE_OPTIONS.map((o) => o.value);
+
 /** Where a section's image sits relative to its text. */
 export const IMAGE_POSITIONS = ["auto", "left", "right", "above", "below"];
 

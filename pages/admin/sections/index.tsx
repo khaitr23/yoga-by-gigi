@@ -4,6 +4,7 @@ import { requireAdminSession } from "../../../lib/admin/auth";
 import AdminLayout from "../../../components/admin/AdminLayout";
 import ImageUpload from "../../../components/admin/ImageUpload";
 import styles from "../../../styles/admin.module.css";
+import { SECTION_TYPE_OPTIONS } from "../../../lib/sections";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const redirect = await requireAdminSession(ctx);
@@ -44,6 +45,7 @@ interface SectionState extends Section {
   _extras: ExtraImage[];
   _imagePosition: string;
   _textAlign: string;
+  _sectionType: string;
 }
 
 const IMAGE_POSITION_OPTIONS = [
@@ -58,13 +60,6 @@ const TEXT_ALIGN_OPTIONS = [
   { value: "left", label: "left" },
   { value: "center", label: "center" },
   { value: "right", label: "right" },
-];
-
-const SECTION_TYPE_OPTIONS = [
-  { value: "large-title-content-section", label: "Large title (hero-style)" },
-  { value: "medium-title-content-section", label: "Medium title" },
-  { value: "small-title-content-section", label: "Small title" },
-  { value: "break", label: "Break (chapter divider)" },
 ];
 
 export default function AdminSectionsPage() {
@@ -94,6 +89,7 @@ export default function AdminSectionsPage() {
       _extras: s.additionalImages ?? [],
       _imagePosition: s.imagePosition || "auto",
       _textAlign: s.textAlign || "left",
+      _sectionType: s.sectionType,
     };
   }
 
@@ -218,6 +214,7 @@ export default function AdminSectionsPage() {
           additionalImageIds: section._extras.map((e) => e.id),
           imagePosition: section._imagePosition,
           textAlign: section._textAlign,
+          sectionType: section._sectionType,
         }),
       });
       const data = await res.json();
@@ -234,6 +231,7 @@ export default function AdminSectionsPage() {
         additionalImages: section._extras,
         imagePosition: section._imagePosition,
         textAlign: section._textAlign,
+        sectionType: section._sectionType,
       });
       setGlobalAlert({ type: "success", msg: `"${section._header || section.sectionType}" saved and published.` });
       setTimeout(() => setGlobalAlert(null), 3500);
@@ -400,6 +398,27 @@ export default function AdminSectionsPage() {
               )}
 
               <form className={styles.form} onSubmit={(e) => handleSave(e, section)}>
+                {/* Section type */}
+                <div className={styles.fieldGroup}>
+                  <label className={styles.label} htmlFor={`type-${section.id}`}>
+                    section type
+                  </label>
+                  <select
+                    id={`type-${section.id}`}
+                    className={styles.select}
+                    value={section._sectionType}
+                    onChange={(e) => update(section.id, { _sectionType: e.target.value })}
+                  >
+                    {SECTION_TYPE_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                  <span className={styles.hint}>
+                    controls the heading size and layout · the full hero treatment
+                    only applies to a large title in the first position
+                  </span>
+                </div>
+
                 {/* Cover image */}
                 <div className={styles.fieldGroup}>
                   <label className={styles.label}>cover image</label>

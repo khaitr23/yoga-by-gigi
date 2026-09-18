@@ -151,6 +151,16 @@
   opacity: 0.7;
 }
 
+/* A large-title section that isn't opening the page: the hero's heading size
+   without the hero layout or its entrance animation. */
+.sectionTitleLarge {
+  font: var(--h1);
+  font-style: italic;
+  color: var(--colorsecondary);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
 .sectionTitleSmall {
   font: var(--h3);
   font-style: italic;
