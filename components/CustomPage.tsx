@@ -17,6 +17,13 @@ export default function CustomPage({ content, preview }) {
         const currentNonBreakIndex = isBreak ? null : nonBreakIndex;
         if (!isBreak) nonBreakIndex++;
 
+        // Primary + extra images, keeping only assets that actually resolved
+        // (an unpublished asset comes back as a link ref without `.fields`).
+        const images: any[] = [
+          section.sectionImage,
+          ...((section.additionalImages as any[]) ?? []),
+        ].filter((img: any) => img?.fields?.file?.url);
+
         const sectionDescriptionText = section.sectionDescription || "";
         const formattedDescription = sectionDescriptionText.replace(/\n/g, "<br>");
         const delay = `${index * 0.12}s`;
@@ -39,6 +46,28 @@ export default function CustomPage({ content, preview }) {
                     className={styles.breakDescription}
                     dangerouslySetInnerHTML={{ __html: formattedDescription }}
                   />
+                )}
+                {images.length > 0 && (
+                  <div className={styles.breakImageStack}>
+                    {images.map((img, idx) => {
+                      const details = img.fields.file.details?.image ?? {};
+                      return (
+                        <div
+                          key={img.sys?.id ?? idx}
+                          className={styles.breakImageFrame}
+                        >
+                          <ContentfulImage
+                            src={img.fields.file.url}
+                            alt={section.sectionHeader}
+                            width={details.width ?? 1200}
+                            height={details.height ?? 900}
+                            className={styles.sectionImage}
+                            sizes="(max-width: 800px) 100vw, 680px"
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
                 )}
               </div>
             </div>
@@ -113,10 +142,6 @@ export default function CustomPage({ content, preview }) {
               {hasImage && (
                 <div className={isHero ? styles.heroImageBlock : styles.imageBlock}>
                   {(() => {
-                    const images: any[] = [
-                      section.sectionImage,
-                      ...((section.additionalImages as any[]) ?? []),
-                    ].filter((img: any) => img?.fields?.file);
                     return (
                       <div className={styles.imageStack}>
                         {images.map((img, idx) => {

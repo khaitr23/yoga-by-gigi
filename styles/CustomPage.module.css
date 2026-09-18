@@ -330,6 +330,22 @@
   margin: 0;
 }
 
+/* Optional image(s) attached to a break section */
+.breakImageStack {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 0.75rem;
+}
+
+.breakImageFrame {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
 /* ─────────────────────────────────────────────
    Responsive
    ───────────────────────────────────────────── */
