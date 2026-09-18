@@ -115,6 +115,8 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  /* Establishes the container that .sectionTitleSmall sizes itself against */
+  container-type: inline-size;
 }
 
 /* Section number badge */
@@ -154,6 +156,12 @@
   font-style: italic;
   color: var(--colorsecondary);
   line-height: 1.3;
+  /* Courier Prime is monospace and advances ~0.6em per character, so a heading
+     of --chars characters needs `chars * 0.6 * font-size` of room. Inverting
+     that against the column width (100cqi) gives the size at which it fits on
+     one line; min() keeps headings that already fit at their full size. The
+     0.61 factor is a little slack against rounding. */
+  font-size: min(24px, calc(100cqi / (var(--chars, 20) * 0.61)));
 }
 
 .sectionDescription {
@@ -279,10 +287,21 @@
   flex-direction: column-reverse;
 }
 
-/* Keep line length readable even though the row is full width */
+/* Keep line length readable even though the row is full width.
+   width:100% keeps the used width definite — the auto margins below would
+   otherwise make it content-based, which collapses to zero once the block is
+   an inline-size container. */
 .stackedSection .textBlock,
 .stackedSection .heroTextBlock {
+  width: 100%;
   max-width: 68ch;
+}
+
+/* A break section reads as one continuous passage rather than a column of
+   copy, so it gets a little more room — enough that short closing words
+   ("…return to.", "…for you.") stay on the line with the words before them. */
+.stackedSection .breakTextBlock {
+  max-width: 75ch;
 }
 
 /* The cap above makes the block narrower than the row, so it also has to be
@@ -345,6 +364,7 @@
   gap: 1.25rem;
   padding-left: 1.5rem;
   border-left: 2px solid rgba(225, 173, 1, 0.35);
+  container-type: inline-size;
 }
 
 /* ─────────────────────────────────────────────

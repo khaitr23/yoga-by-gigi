@@ -174,7 +174,15 @@ export default function CustomPage({ content, preview }) {
                   <h2 className={styles.sectionTitle}>{section.sectionHeader}</h2>
                 )}
                 {!isHero && !isMedium && (
-                  <h3 className={styles.sectionTitleSmall}>
+                  // --chars lets the stylesheet size this to fit one line
+                  <h3
+                    className={styles.sectionTitleSmall}
+                    style={
+                      {
+                        "--chars": String((section.sectionHeader || "").length),
+                      } as React.CSSProperties
+                    }
+                  >
                     {section.sectionHeader}
                   </h3>
                 )}
