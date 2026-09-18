@@ -285,6 +285,20 @@
   max-width: 68ch;
 }
 
+/* The cap above makes the block narrower than the row, so it also has to be
+   placed within it — otherwise centered text sits centered inside a box that
+   is itself pinned to the left edge. */
+.stackedSection .textBlock.alignCenter,
+.stackedSection .heroTextBlock.alignCenter {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.stackedSection .textBlock.alignRight,
+.stackedSection .heroTextBlock.alignRight {
+  margin-left: auto;
+}
+
 .stackedSection .imageBlock,
 .stackedSection .heroImageBlock {
   width: 100%;
