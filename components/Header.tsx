@@ -5,25 +5,24 @@ import logoPic from "../public/images/logo.png";
 import Image from "next/image";
 import ContentfulImage from "./ui/ContentfulImage";
 import styles from "../styles/Header.module.css";
-import { DEFAULT_SITE_NAME } from "../lib/siteSettings";
-
-const NAV_ITEMS = [
-  { href: "/", label: "My Yoga Journey" },
-  { href: "/retreats", label: "Retreats" },
-  { href: "/blogs", label: "Blog" },
-  { href: "/booking", label: "Booking" },
-  { href: "#", label: "Shop" },
-];
+import {
+  DEFAULT_SITE_NAME,
+  NavLabels,
+  resolveNavItems,
+} from "../lib/siteSettings";
 
 interface Props {
   siteName?: string;
   logoUrl?: string | null;
+  navLabels?: NavLabels;
 }
 
 export default function Header({
   siteName = DEFAULT_SITE_NAME,
   logoUrl = null,
+  navLabels,
 }: Props) {
+  const navItems = resolveNavItems(navLabels);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Prevent body scroll when sidebar is open
@@ -68,8 +67,8 @@ export default function Header({
 
           {/* ── Desktop nav ── */}
           <ul className={styles.navMenu}>
-            {NAV_ITEMS.map(({ href, label }) => (
-              <li key={label} className={styles.navItem}>
+            {navItems.map(({ key, href, label }) => (
+              <li key={key} className={styles.navItem}>
                 <Link href={href} className={styles.navLink}>
                   {label}
                 </Link>
@@ -109,9 +108,9 @@ export default function Header({
 
         <nav>
           <ul className={styles.sidebarNav}>
-            {NAV_ITEMS.map(({ href, label }, i) => (
+            {navItems.map(({ key, href, label }, i) => (
               <li
-                key={label}
+                key={key}
                 className={styles.sidebarNavItem}
                 style={{ "--i": i } as React.CSSProperties}
               >

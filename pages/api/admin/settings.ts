@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { isAuthenticated } from "../../../lib/admin/auth";
+import { NAV_KEYS, MAX_NAV_LABEL } from "../../../lib/siteSettings";
 import {
   getSiteSettingsForAdmin,
   updateSiteSettings,
@@ -19,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (req.method === "PUT") {
-      const { siteName, logoAssetId } = req.body;
+      const { siteName, logoAssetId, navLabels } = req.body;
 
       if (siteName !== undefined) {
         if (typeof siteName !== "string" || !siteName.trim()) {
@@ -30,10 +31,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       }
 
-      console.log("[settings] updating", { siteName, logoAssetId });
+      if (navLabels !== undefined) {
+        if (typeof navLabels !== "object" || navLabels === null) {
+          return res.status(400).json({ error: "navLabels must be an object" });
+        }
+        for (const [key, value] of Object.entries(navLabels)) {
+          if (!NAV_KEYS.includes(key)) {
+            return res.status(400).json({ error: `unknown nav tab: ${key}` });
+          }
+          if (typeof value !== "string") {
+            return res.status(400).json({ error: `label for ${key} must be text` });
+          }
+          if (value.length > MAX_NAV_LABEL) {
+            return res.status(400).json({
+              error: `label for ${key} must be ${MAX_NAV_LABEL} characters or fewer`,
+            });
+          }
+        }
+      }
+
+      console.log("[settings] updating", { siteName, logoAssetId, navLabels });
       await updateSiteSettings({
         siteName: siteName?.trim(),
         logoAssetId,
+        navLabels,
       });
 
       await new Promise((r) => setTimeout(r, 5000));

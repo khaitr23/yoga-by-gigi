@@ -1,5 +1,6 @@
 import { createClient } from "contentful-management";
 import { IMAGE_POSITIONS, TEXT_ALIGNMENTS } from "../sections";
+import { sanitizeNavLabels } from "../siteSettings";
 
 function getClient() {
   return createClient({
@@ -144,6 +145,14 @@ const SITE_SETTINGS_FIELDS = [
     localized: false,
     validations: [],
   },
+  // { navKey: "custom label" } — only labels; the routes stay in code.
+  {
+    id: "navLabels",
+    name: "Navigation Labels",
+    type: "Object",
+    required: false,
+    localized: false,
+  },
 ];
 
 /**
@@ -154,13 +163,31 @@ export async function ensureSiteSettingsEntry() {
   const c = getClient();
   const { spaceId, environmentId } = spaceEnv();
 
-  // 1 — content type
+  // 1 — content type. It may already exist from an earlier version of this app,
+  // in which case it only needs the fields that have been added since.
   try {
-    await c.contentType.get({
+    const existingType = await c.contentType.get({
       spaceId,
       environmentId,
       contentTypeId: SITE_SETTINGS_TYPE,
     });
+    const missing = SITE_SETTINGS_FIELDS.filter(
+      (f) => !existingType.fields.some((e: any) => e.id === f.id)
+    );
+    if (missing.length) {
+      const updated = await c.contentType.update(
+        { spaceId, environmentId, contentTypeId: SITE_SETTINGS_TYPE },
+        { ...existingType, fields: [...existingType.fields, ...(missing as any)] }
+      );
+      await c.contentType.publish(
+        { spaceId, environmentId, contentTypeId: SITE_SETTINGS_TYPE },
+        updated
+      );
+      console.log(
+        "[siteSettings] added",
+        missing.map((f) => f.id).join(", ")
+      );
+    }
   } catch {
     const created = await c.contentType.createWithId(
       { spaceId, environmentId, contentTypeId: SITE_SETTINGS_TYPE },
@@ -202,16 +229,19 @@ export async function getSiteSettingsForAdmin() {
     siteName: entry.fields?.siteName?.["en-US"] ?? DEFAULT_SITE_NAME,
     logoId,
     logoUrl: logoId ? await getAssetUrl(logoId) : null,
+    navLabels: sanitizeNavLabels(entry.fields?.navLabels?.["en-US"]),
   };
 }
 
-/** Writes the site name and/or logo, then publishes. */
+/** Writes the site name, logo and/or nav labels, then publishes. */
 export async function updateSiteSettings({
   siteName,
   logoAssetId,
+  navLabels,
 }: {
   siteName?: string;
   logoAssetId?: string;
+  navLabels?: Record<string, string>;
 }) {
   const entry: any = await ensureSiteSettingsEntry();
   const fields: any = { ...entry.fields };
@@ -220,6 +250,9 @@ export async function updateSiteSettings({
     fields.logo = {
       "en-US": { sys: { type: "Link", linkType: "Asset", id: logoAssetId } },
     };
+  }
+  if (navLabels !== undefined) {
+    fields.navLabels = { "en-US": sanitizeNavLabels(navLabels) };
   }
   return updateAndPublishEntry(entry.sys.id, fields, entry);
 }

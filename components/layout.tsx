@@ -10,7 +10,7 @@ export default function Layout({
   children: React.ReactNode;
   siteSettings?: SiteSettings;
 }) {
-  const { siteName, logoUrl } = siteSettings ?? DEFAULT_SITE_SETTINGS;
+  const { siteName, logoUrl, navLabels } = siteSettings ?? DEFAULT_SITE_SETTINGS;
   // Contentful can resize the favicon for us; the bundled logo is already small.
   const favicon = logoUrl ? `${logoUrl}?w=64&h=64&fit=fill` : "/images/logo.png";
 
@@ -22,7 +22,7 @@ export default function Layout({
         <title>{siteName}</title>
         <link rel="icon" href={favicon} />
       </Head>
-      <Header siteName={siteName} logoUrl={logoUrl} />
+      <Header siteName={siteName} logoUrl={logoUrl} navLabels={navLabels} />
       {children}
       <Footer siteName={siteName} />
     </>
