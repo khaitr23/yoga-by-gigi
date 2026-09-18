@@ -2,9 +2,13 @@ import React from "react";
 import ContentfulImage from "../components/ui/ContentfulImage";
 import PreviewAlert from "./ui/PreviewAlert";
 import styles from "../styles/CustomPage.module.css";
+import { IMAGE_POSITIONS, resolveTextAlign } from "../lib/sections";
 
-/** Where a section's image sits relative to its text. */
-const IMAGE_POSITIONS = ["auto", "left", "right", "above", "below"];
+const TEXT_ALIGN_CLASS: Record<string, string> = {
+  left: styles.alignLeft,
+  center: styles.alignCenter,
+  right: styles.alignRight,
+};
 
 /** Renders the primary image plus any extras as a vertical stack. */
 function ImageStack({
@@ -71,6 +75,10 @@ export default function CustomPage({ content, preview }) {
         const position = IMAGE_POSITIONS.includes(section.imagePosition)
           ? section.imagePosition
           : "auto";
+        const alignClass =
+          TEXT_ALIGN_CLASS[
+            resolveTextAlign(section.textAlign, section.sectionType, hasImage)
+          ];
         const isStacked = position === "above" || position === "below";
         const imageAbove = position === "above";
         const imageLeft =
@@ -122,7 +130,9 @@ export default function CustomPage({ content, preview }) {
                 style={{ "--delay": delay } as React.CSSProperties}
               >
                 <div className={gridClass}>
-                  <div className={`${styles.textBlock} ${styles.breakTextBlock}`}>
+                  <div
+                    className={`${styles.textBlock} ${styles.breakTextBlock} ${alignClass}`}
+                  >
                     {breakText}
                   </div>
                   <div className={styles.imageBlock}>
@@ -144,7 +154,7 @@ export default function CustomPage({ content, preview }) {
               className={styles.breakWrapper}
               style={{ "--delay": delay } as React.CSSProperties}
             >
-              <div className={styles.breakInner}>{breakText}</div>
+              <div className={`${styles.breakInner} ${alignClass}`}>{breakText}</div>
             </div>
           );
         }
@@ -157,7 +167,15 @@ export default function CustomPage({ content, preview }) {
           >
             <div className={hasImage ? gridClass : ""}>
               {/* ── Text block ── */}
-              <div className={isHero ? styles.heroTextBlock : hasImage ? styles.textBlock : styles.textOnlySection}>
+              <div
+                className={`${
+                  isHero
+                    ? styles.heroTextBlock
+                    : hasImage
+                    ? styles.textBlock
+                    : styles.textOnlySection
+                } ${alignClass}`}
+              >
                 {/* Section counter (non-hero only) */}
                 {!isHero && currentNonBreakIndex !== null && (
                   <span className={styles.sectionNumber} aria-hidden="true">

@@ -8,6 +8,7 @@ import PreviewAlert from "../../components/ui/PreviewAlert";
 import proseStyle from "../../styles/prose.module.css";
 import postStyle from "../../styles/Post.module.css";
 import Link from "next/link";
+import { getSiteSettings } from "../../lib/contentful/siteSettings";
 
 export default function Post({ post, preview }) {
   const router = useRouter();
@@ -65,8 +66,9 @@ export const getStaticProps: GetStaticProps = async ({
     props: {
       post: response?.items?.[0],
       preview,
-      revalidate: 60,
+      siteSettings: await getSiteSettings(preview),
     },
+    revalidate: 60,
   };
 };
 

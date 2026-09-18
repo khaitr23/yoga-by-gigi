@@ -7,6 +7,7 @@ const NAV_LINKS = [
   { href: "/admin/posts", label: "posts" },
   { href: "/admin/retreats", label: "retreats" },
   { href: "/admin/sections", label: "sections" },
+  { href: "/admin/settings", label: "settings" },
 ];
 
 interface Props {

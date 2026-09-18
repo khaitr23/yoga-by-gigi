@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { isAuthenticated } from "../../../../lib/admin/auth";
+import { resolveTextAlign } from "../../../../lib/sections";
 import {
   getEntries,
   getEntry,
@@ -52,15 +53,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             })
           );
 
+          const sectionType = (entry.fields.sectionType as any)?.["en-US"] ?? "";
+          const hasImage = !!coverImageId || additionalImages.some((a) => a.url);
+
           return {
             id: entry.sys.id,
             sectionHeader: (entry.fields.sectionHeader as any)?.["en-US"] ?? "",
             sectionDescription: (entry.fields.sectionDescription as any)?.["en-US"] ?? "",
-            sectionType: (entry.fields.sectionType as any)?.["en-US"] ?? "",
+            sectionType,
             ctaButtonText: (entry.fields.ctaButtonText as any)?.["en-US"] ?? "",
             ctaButtonLink: (entry.fields.ctaButtonLink as any)?.["en-US"] ?? "",
             isTextAboveImage: (entry.fields.isTextAboveImage as any)?.["en-US"] ?? true,
             imagePosition: (entry.fields.imagePosition as any)?.["en-US"] ?? "auto",
+            textAlign: resolveTextAlign(
+              (entry.fields.textAlign as any)?.["en-US"],
+              sectionType,
+              hasImage
+            ),
             coverImageId,
             coverImageUrl,
             additionalImages: additionalImages.filter((a) => a.url),

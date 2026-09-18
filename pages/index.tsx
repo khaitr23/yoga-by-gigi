@@ -1,5 +1,6 @@
 import { client, previewClient } from "../lib/contentful/client";
 import CustomPage from "../components/CustomPage";
+import { getSiteSettings } from "../lib/contentful/siteSettings";
 
 export default function Home({ content, preview }) {
   return <CustomPage content={content} preview={preview} />;
@@ -21,6 +22,7 @@ export async function getStaticProps({ preview = false }) {
       sectionType: "break",
       isTextAboveImage: true,
       imagePosition: "auto",
+      textAlign: null,
       sectionImage: null,
       ctaButtonText: null,
       ctaButtonLink: null,
@@ -48,6 +50,7 @@ export async function getStaticProps({ preview = false }) {
       section?.fields?.isTextAboveImage ?? section?.isTextAboveImage ?? null, // Boolean check
     imagePosition:
       section?.fields?.imagePosition || section?.imagePosition || "auto",
+    textAlign: section?.fields?.textAlign || section?.textAlign || null,
   }));
 
   const content = {
@@ -55,7 +58,7 @@ export async function getStaticProps({ preview = false }) {
   };
 
   return {
-    props: { content, preview },
+    props: { content, preview, siteSettings: await getSiteSettings(preview) },
     revalidate: 60,
   };
 }

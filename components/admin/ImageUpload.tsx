@@ -4,19 +4,35 @@ import styles from "../../styles/admin.module.css";
 interface Props {
   currentUrl?: string | null;
   onUploaded: (assetId: string, url: string) => void;
+  /**
+   * Keep the alpha channel (PNG) instead of flattening to JPEG. Needed for
+   * logos — a transparent background turns black once it's re-encoded as JPEG.
+   */
+  preserveTransparency?: boolean;
 }
 
 // Force Contentful to re-encode as browser-safe JPEG (fixes CMYK / exotic color profiles).
-function normalizeContentfulUrl(url: string | null | undefined): string | null {
+// Transparent images keep their own format instead, so the alpha channel survives.
+function normalizeContentfulUrl(
+  url: string | null | undefined,
+  preserveTransparency = false
+): string | null {
   if (!url) return null;
   if (url.startsWith("blob:") || url.startsWith("data:")) return url;
   if (!url.includes("images.ctfassets.net") && !url.includes("images.contentful.com")) return url;
-  return url.includes("?") ? `${url}&fm=jpg&fl=progressive&w=1200&q=80` : `${url}?fm=jpg&fl=progressive&w=1200&q=80`;
+  const params = preserveTransparency ? "w=600&q=80" : "fm=jpg&fl=progressive&w=1200&q=80";
+  return url.includes("?") ? `${url}&${params}` : `${url}?${params}`;
 }
 
-export default function ImageUpload({ currentUrl, onUploaded }: Props) {
+export default function ImageUpload({
+  currentUrl,
+  onUploaded,
+  preserveTransparency = false,
+}: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [preview, setPreview] = useState<string | null>(normalizeContentfulUrl(currentUrl));
+  const [preview, setPreview] = useState<string | null>(
+    normalizeContentfulUrl(currentUrl, preserveTransparency)
+  );
   const [progress, setProgress] = useState("");
   const [uploaded, setUploaded] = useState(false);
 
@@ -29,7 +45,7 @@ export default function ImageUpload({ currentUrl, onUploaded }: Props) {
       img.onload = () => {
         URL.revokeObjectURL(objectUrl);
         try {
-          const MAX = 1800;
+          const MAX = preserveTransparency ? 800 : 1800;
           let { width, height } = img;
           if (width > MAX || height > MAX) {
             if (width > height) { height = Math.round((height * MAX) / width); width = MAX; }
@@ -39,7 +55,11 @@ export default function ImageUpload({ currentUrl, onUploaded }: Props) {
           canvas.width = width;
           canvas.height = height;
           canvas.getContext("2d")!.drawImage(img, 0, 0, width, height);
-          resolve({ base64: canvas.toDataURL("image/jpeg", 0.82), contentType: "image/jpeg" });
+          resolve(
+            preserveTransparency
+              ? { base64: canvas.toDataURL("image/png"), contentType: "image/png" }
+              : { base64: canvas.toDataURL("image/jpeg", 0.82), contentType: "image/jpeg" }
+          );
         } catch (e: any) {
           reject(new Error(e?.message || "Image compression failed"));
         }
@@ -71,7 +91,9 @@ export default function ImageUpload({ currentUrl, onUploaded }: Props) {
     try {
       let base64: string;
       let contentType: string;
-      let fileName = file.name;
+      let fileName = preserveTransparency
+        ? file.name.replace(/\.[^/.]+$/, "") + ".png"
+        : file.name;
       try {
         const compressed = await compressImage(file);
         base64 = compressed.base64;
@@ -105,7 +127,7 @@ export default function ImageUpload({ currentUrl, onUploaded }: Props) {
       // normalized URL (?fm=jpg forces re-encode so exotic color profiles render).
       setProgress("finalizing…");
       await new Promise((r) => setTimeout(r, 2500));
-      setPreview(normalizeContentfulUrl(data.url));
+      setPreview(normalizeContentfulUrl(data.url, preserveTransparency));
       URL.revokeObjectURL(localPreview);
       setProgress("");
       setUploaded(true);

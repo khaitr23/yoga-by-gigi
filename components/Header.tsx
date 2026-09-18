@@ -3,7 +3,9 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import logoPic from "../public/images/logo.png";
 import Image from "next/image";
+import ContentfulImage from "./ui/ContentfulImage";
 import styles from "../styles/Header.module.css";
+import { DEFAULT_SITE_NAME } from "../lib/siteSettings";
 
 const NAV_ITEMS = [
   { href: "/", label: "My Yoga Journey" },
@@ -13,7 +15,15 @@ const NAV_ITEMS = [
   { href: "#", label: "Shop" },
 ];
 
-export default function Header() {
+interface Props {
+  siteName?: string;
+  logoUrl?: string | null;
+}
+
+export default function Header({
+  siteName = DEFAULT_SITE_NAME,
+  logoUrl = null,
+}: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Prevent body scroll when sidebar is open
@@ -31,15 +41,29 @@ export default function Header() {
           sidebar and overlay must live OUTSIDE it to cover the full page */}
       <div className={styles.headerWrapper}>
         <header className={styles.headerSection}>
-          <Link href="/" onClick={close}>
-            <Image
-              src={logoPic}
-              alt=""
-              className={styles.logo}
-              width={0}
-              height={0}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
+          <Link href="/" onClick={close} aria-label={siteName}>
+            {logoUrl ? (
+              // preserveTransparency keeps a logo's alpha channel intact
+              <ContentfulImage
+                src={logoUrl}
+                alt=""
+                className={styles.logo}
+                width={100}
+                height={100}
+                preserveTransparency
+                priority
+                style={{ width: "100%", height: "100%", objectFit: "contain" }}
+              />
+            ) : (
+              <Image
+                src={logoPic}
+                alt=""
+                className={styles.logo}
+                width={0}
+                height={0}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            )}
           </Link>
 
           {/* ── Desktop nav ── */}
@@ -78,7 +102,7 @@ export default function Header() {
         aria-hidden={!isMenuOpen}
       >
         <div className={styles.sidebarBrand}>
-          <span className={styles.sidebarBrandName}>yoga by gigi</span>
+          <span className={styles.sidebarBrandName}>{siteName}</span>
           <span className={styles.sidebarBrandDot}>.</span>
         </div>
         <span className={styles.sidebarRule} />

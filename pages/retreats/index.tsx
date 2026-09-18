@@ -3,6 +3,7 @@ import { GetStaticProps } from "next";
 import RetreatPostCard from "../../components/retreats/RetreatPostCard";
 import styles from "../../styles/Retreats.module.css";
 import { useState } from "react";
+import { getSiteSettings } from "../../lib/contentful/siteSettings";
 
 export default function Retreats({ retreats }) {
   const [showUpcoming, setShowUpcoming] = useState(true);
@@ -79,7 +80,7 @@ export const getStaticProps: GetStaticProps = async () => {
     a.fields.startDate < b.fields.startDate ? 1 : -1
   );
   return {
-    props: { retreats: sortedRetreats },
+    props: { retreats: sortedRetreats, siteSettings: await getSiteSettings() },
     revalidate: 60,
   };
 };

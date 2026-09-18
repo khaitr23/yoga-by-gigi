@@ -2,13 +2,14 @@ import Image from "next/image";
 import instaIcon from "../public/images/icon-instagram.svg";
 import fbIcon from "../public/images/icon-facebook.svg";
 import styles from "../styles/Footer.module.css";
+import { DEFAULT_SITE_NAME } from "../lib/siteSettings";
 
-export default function Footer() {
+export default function Footer({ siteName = DEFAULT_SITE_NAME }: { siteName?: string }) {
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
         <div className={styles.brand}>
-          <p className={styles.brandName}>yoga by gigi</p>
+          <p className={styles.brandName}>{siteName}</p>
           <p className={styles.tagline}>breathe · move · be</p>
         </div>
 
@@ -40,7 +41,7 @@ export default function Footer() {
               <Image className={styles.socialIcon} src={instaIcon} alt="" width={20} height={20} />
             </a>
           </div>
-          <p className={styles.copyright}>© {new Date().getFullYear()} yoga by gigi</p>
+          <p className={styles.copyright}>© {new Date().getFullYear()} {siteName}</p>
         </div>
       </div>
     </footer>

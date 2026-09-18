@@ -2,6 +2,7 @@ import { client } from "../../lib/contentful/client";
 import PostCard from "../../components/posts/PostCard";
 import { GetStaticProps } from "next";
 import styles from "../../styles/Blogs.module.css";
+import { getSiteSettings } from "../../lib/contentful/siteSettings";
 
 export default function Blogs({ posts }) {
   return (
@@ -42,7 +43,7 @@ export const getStaticProps: GetStaticProps = async () => {
     a.fields.date < b.fields.date ? 1 : -1
   );
   return {
-    props: { posts: sortedBlogs },
+    props: { posts: sortedBlogs, siteSettings: await getSiteSettings() },
     revalidate: 60,
   };
 };

@@ -6,6 +6,7 @@ import PostBody from "../../components/posts/PostBody";
 import RetreatHeader from "../../components/retreats/RetreatHeader";
 import proseStyle from "../../styles/prose.module.css";
 import Link from "next/link";
+import { getSiteSettings } from "../../lib/contentful/siteSettings";
 
 export default function Retreat({ retreat, preview }) {
   const router = useRouter();
@@ -56,6 +57,7 @@ export async function getStaticProps({ params, preview = false }) {
     props: {
       retreat: response?.items?.[0],
       preview,
+      siteSettings: await getSiteSettings(preview),
     },
     revalidate: 60,
   };

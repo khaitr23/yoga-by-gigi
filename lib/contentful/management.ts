@@ -1,4 +1,7 @@
 import { createClient } from "contentful-management";
+import { IMAGE_POSITIONS, TEXT_ALIGNMENTS } from "../sections";
+
+export { IMAGE_POSITIONS, TEXT_ALIGNMENTS };
 
 function getClient() {
   return createClient({
@@ -62,8 +65,6 @@ export async function deleteEntry(entryId: string) {
 
 // ── Content type helpers ─────────────────────────────────────────
 
-/** Where a section's image sits relative to its text. */
-export const IMAGE_POSITIONS = ["auto", "left", "right", "above", "below"];
 
 // Fields this app adds to the section content type on top of whatever Contentful started with.
 const SECTION_FIELDS = [
@@ -82,6 +83,14 @@ const SECTION_FIELDS = [
     required: false,
     localized: false,
     validations: [{ in: IMAGE_POSITIONS }],
+  },
+  {
+    id: "textAlign",
+    name: "Text Alignment",
+    type: "Symbol",
+    required: false,
+    localized: false,
+    validations: [{ in: TEXT_ALIGNMENTS }],
   },
 ];
 
@@ -119,6 +128,102 @@ export async function ensureSectionFields(contentTypeId: string) {
   } catch (err) {
     console.error("[ensureSectionFields] failed:", err);
   }
+}
+
+// ── Site settings ────────────────────────────────────────────────
+
+const SITE_SETTINGS_TYPE = "siteSettings";
+const DEFAULT_SITE_NAME = "yoga by gigi";
+
+const SITE_SETTINGS_FIELDS = [
+  { id: "siteName", name: "Site Name", type: "Symbol", required: true, localized: false },
+  {
+    id: "logo",
+    name: "Logo",
+    type: "Link",
+    linkType: "Asset",
+    required: false,
+    localized: false,
+    validations: [],
+  },
+];
+
+/**
+ * Returns the single site settings entry, creating the content type and the
+ * entry itself the first time the admin panel asks for them.
+ */
+export async function ensureSiteSettingsEntry() {
+  const c = getClient();
+  const { spaceId, environmentId } = spaceEnv();
+
+  // 1 — content type
+  try {
+    await c.contentType.get({
+      spaceId,
+      environmentId,
+      contentTypeId: SITE_SETTINGS_TYPE,
+    });
+  } catch {
+    const created = await c.contentType.createWithId(
+      { spaceId, environmentId, contentTypeId: SITE_SETTINGS_TYPE },
+      {
+        name: "Site Settings",
+        description: "Site-wide name and logo, edited from the admin panel.",
+        displayField: "siteName",
+        fields: SITE_SETTINGS_FIELDS as any,
+      }
+    );
+    await c.contentType.publish(
+      { spaceId, environmentId, contentTypeId: SITE_SETTINGS_TYPE },
+      created
+    );
+    console.log("[siteSettings] created content type");
+  }
+
+  // 2 — the singleton entry
+  const existing = await c.entry.getMany({
+    spaceId,
+    environmentId,
+    query: { content_type: SITE_SETTINGS_TYPE, limit: 1 },
+  });
+  if (existing.items.length) return existing.items[0];
+
+  const created = await c.entry.create(
+    { spaceId, environmentId, contentTypeId: SITE_SETTINGS_TYPE },
+    { fields: { siteName: { "en-US": DEFAULT_SITE_NAME } } }
+  );
+  console.log("[siteSettings] created entry", created.sys.id);
+  return c.entry.publish({ spaceId, environmentId, entryId: created.sys.id }, created);
+}
+
+/** Reads the current settings through the management API (admin panel view). */
+export async function getSiteSettingsForAdmin() {
+  const entry: any = await ensureSiteSettingsEntry();
+  const logoId = entry.fields?.logo?.["en-US"]?.sys?.id ?? null;
+  return {
+    siteName: entry.fields?.siteName?.["en-US"] ?? DEFAULT_SITE_NAME,
+    logoId,
+    logoUrl: logoId ? await getAssetUrl(logoId) : null,
+  };
+}
+
+/** Writes the site name and/or logo, then publishes. */
+export async function updateSiteSettings({
+  siteName,
+  logoAssetId,
+}: {
+  siteName?: string;
+  logoAssetId?: string;
+}) {
+  const entry: any = await ensureSiteSettingsEntry();
+  const fields: any = { ...entry.fields };
+  if (siteName !== undefined) fields.siteName = { "en-US": siteName };
+  if (logoAssetId) {
+    fields.logo = {
+      "en-US": { sys: { type: "Link", linkType: "Asset", id: logoAssetId } },
+    };
+  }
+  return updateAndPublishEntry(entry.sys.id, fields, entry);
 }
 
 // ── Asset helpers ────────────────────────────────────────────────

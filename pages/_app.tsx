@@ -11,7 +11,7 @@ export default function App({ Component, pageProps }) {
   }
 
   return (
-    <Layout>
+    <Layout siteSettings={pageProps.siteSettings}>
       <Component {...pageProps} />
     </Layout>
   );

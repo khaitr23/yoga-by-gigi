@@ -8,6 +8,7 @@ import {
   deleteEntry,
   ensureSectionFields,
   IMAGE_POSITIONS,
+  TEXT_ALIGNMENTS,
 } from "../../../../lib/contentful/management";
 
 export const maxDuration = 60;
@@ -40,6 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         assetId,
         additionalImageIds,
         imagePosition,
+        textAlign,
       } = req.body;
 
       const fields: any = {
@@ -61,6 +63,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // The field is added on demand, so make sure it exists before writing it.
         await ensureSectionFields(existing.sys.contentType.sys.id);
         fields.imagePosition = { "en-US": imagePosition };
+      }
+      if (textAlign !== undefined) {
+        if (!TEXT_ALIGNMENTS.includes(textAlign)) {
+          return res.status(400).json({
+            error: `textAlign must be one of: ${TEXT_ALIGNMENTS.join(", ")}`,
+          });
+        }
+        await ensureSectionFields(existing.sys.contentType.sys.id);
+        fields.textAlign = { "en-US": textAlign };
       }
       if (Array.isArray(additionalImageIds)) {
         fields.additionalImages = {

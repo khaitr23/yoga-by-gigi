@@ -22,6 +22,7 @@ interface Section {
   ctaButtonLink: string;
   isTextAboveImage: boolean;
   imagePosition: string;
+  textAlign: string;
   coverImageId: string | null;
   coverImageUrl: string | null;
   additionalImages: ExtraImage[];
@@ -42,6 +43,7 @@ interface SectionState extends Section {
   _assetUrl: string;
   _extras: ExtraImage[];
   _imagePosition: string;
+  _textAlign: string;
 }
 
 const IMAGE_POSITION_OPTIONS = [
@@ -50,6 +52,12 @@ const IMAGE_POSITION_OPTIONS = [
   { value: "right", label: "right of the text" },
   { value: "above", label: "above the text" },
   { value: "below", label: "below the text" },
+];
+
+const TEXT_ALIGN_OPTIONS = [
+  { value: "left", label: "left" },
+  { value: "center", label: "center" },
+  { value: "right", label: "right" },
 ];
 
 const SECTION_TYPE_OPTIONS = [
@@ -85,6 +93,7 @@ export default function AdminSectionsPage() {
       _assetUrl: "",
       _extras: s.additionalImages ?? [],
       _imagePosition: s.imagePosition || "auto",
+      _textAlign: s.textAlign || "left",
     };
   }
 
@@ -208,6 +217,7 @@ export default function AdminSectionsPage() {
           assetId: section._assetId || undefined,
           additionalImageIds: section._extras.map((e) => e.id),
           imagePosition: section._imagePosition,
+          textAlign: section._textAlign,
         }),
       });
       const data = await res.json();
@@ -223,6 +233,7 @@ export default function AdminSectionsPage() {
         coverImageUrl: section._assetUrl || section.coverImageUrl,
         additionalImages: section._extras,
         imagePosition: section._imagePosition,
+        textAlign: section._textAlign,
       });
       setGlobalAlert({ type: "success", msg: `"${section._header || section.sectionType}" saved and published.` });
       setTimeout(() => setGlobalAlert(null), 3500);
@@ -401,25 +412,44 @@ export default function AdminSectionsPage() {
                   <span className={styles.hint}>click the preview to replace the image</span>
                 </div>
 
-                {/* Image position */}
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label} htmlFor={`imgpos-${section.id}`}>
-                    image position
-                  </label>
-                  <select
-                    id={`imgpos-${section.id}`}
-                    className={styles.select}
-                    value={section._imagePosition}
-                    onChange={(e) => update(section.id, { _imagePosition: e.target.value })}
-                  >
-                    {IMAGE_POSITION_OPTIONS.map((opt) => (
-                      <option key={opt.value} value={opt.value}>{opt.label}</option>
-                    ))}
-                  </select>
-                  <span className={styles.hint}>
-                    where the image sits next to the text · auto keeps the left/right
-                    rhythm with the sections around it
-                  </span>
+                {/* Layout row — image position + text alignment */}
+                <div className={styles.fieldRow}>
+                  <div className={styles.fieldGroup}>
+                    <label className={styles.label} htmlFor={`imgpos-${section.id}`}>
+                      image position
+                    </label>
+                    <select
+                      id={`imgpos-${section.id}`}
+                      className={styles.select}
+                      value={section._imagePosition}
+                      onChange={(e) => update(section.id, { _imagePosition: e.target.value })}
+                    >
+                      {IMAGE_POSITION_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                    <span className={styles.hint}>
+                      auto keeps the left/right rhythm with the sections around it
+                    </span>
+                  </div>
+                  <div className={styles.fieldGroup}>
+                    <label className={styles.label} htmlFor={`align-${section.id}`}>
+                      text alignment
+                    </label>
+                    <select
+                      id={`align-${section.id}`}
+                      className={styles.select}
+                      value={section._textAlign}
+                      onChange={(e) => update(section.id, { _textAlign: e.target.value })}
+                    >
+                      {TEXT_ALIGN_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                    <span className={styles.hint}>
+                      how the header, text and button line up
+                    </span>
+                  </div>
                 </div>
 
                 {/* Additional images */}

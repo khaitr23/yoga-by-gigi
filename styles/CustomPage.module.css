@@ -384,6 +384,47 @@
 }
 
 /* ─────────────────────────────────────────────
+   Text alignment — left (default) / center / right
+   ───────────────────────────────────────────── */
+.alignLeft   { text-align: left;   align-items: flex-start; }
+.alignCenter { text-align: center; align-items: center; }
+.alignRight  { text-align: right;  align-items: flex-end; }
+
+/* The underline under a medium title follows the text */
+.alignCenter .sectionTitle::after {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.alignRight .sectionTitle::after {
+  left: auto;
+  right: 0;
+}
+
+/* The gold rules that hang off the left edge only read correctly when the
+   text is flush left, so drop them (and their indent) when it isn't. */
+.heroTextBlock.alignCenter,
+.heroTextBlock.alignRight,
+.textOnlySection.alignCenter,
+.textOnlySection.alignRight {
+  padding-left: 0;
+}
+
+.heroTextBlock.alignCenter::before,
+.heroTextBlock.alignRight::before {
+  display: none;
+}
+
+.textOnlySection.alignCenter,
+.textOnlySection.alignRight {
+  border-left: none;
+}
+
+/* A centered text-only section should sit in the middle of the page */
+.textOnlySection.alignCenter { margin: 0 auto; }
+.textOnlySection.alignRight  { margin-left: auto; }
+
+/* ─────────────────────────────────────────────
    Responsive
    ───────────────────────────────────────────── */
 @media (max-width: 800px) {

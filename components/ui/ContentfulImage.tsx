@@ -6,6 +6,16 @@ const contentfulLoader = ({ src, width, quality }) => {
   return `${src}?w=${width}&q=${quality || 80}&fm=jpg&fl=progressive`;
 };
 
-export default function ContentfulImage(props) {
-  return <Image loader={contentfulLoader} {...props} />;
+// Leaves the source format alone so transparency survives (logos, PNGs with alpha).
+const transparentLoader = ({ src, width, quality }) => {
+  return `${src}?w=${width}&q=${quality || 80}`;
+};
+
+export default function ContentfulImage({ preserveTransparency = false, ...props }: any) {
+  return (
+    <Image
+      loader={preserveTransparency ? transparentLoader : contentfulLoader}
+      {...props}
+    />
+  );
 }
