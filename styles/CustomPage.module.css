@@ -169,9 +169,16 @@
   /* Courier Prime is monospace and advances ~0.6em per character, so a heading
      of --chars characters needs `chars * 0.6 * font-size` of room. Inverting
      that against the column width (100cqi) gives the size at which it fits on
-     one line; min() keeps headings that already fit at their full size. The
-     0.61 factor is a little slack against rounding. */
-  font-size: min(24px, calc(100cqi / (var(--chars, 20) * 0.61)));
+     one line. The 0.61 factor is a little slack against rounding.
+
+     clamp()'s upper bound keeps headings that already fit at full size; the
+     lower bound is the point where we stop chasing a single line. A header long
+     enough to need less than 16px is a sentence rather than a title, and would
+     shrink to a few pixels — below the floor it simply wraps at 16px instead,
+     which still reads as a peer of the other small titles. 16px is the size the
+     longest genuine headers already use in a narrow column, so nothing that fit
+     on one line before starts wrapping now. */
+  font-size: clamp(16px, calc(100cqi / (var(--chars, 20) * 0.61)), 24px);
 }
 
 .sectionDescription {
