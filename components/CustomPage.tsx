@@ -11,15 +11,7 @@ const TEXT_ALIGN_CLASS: Record<string, string> = {
 };
 
 /** Renders the primary image plus any extras as a vertical stack. */
-function ImageStack({
-  images,
-  alt,
-  sizes,
-}: {
-  images: any[];
-  alt: string;
-  sizes: string;
-}) {
+function ImageStack({ images, alt }: { images: any[]; alt: string }) {
   return (
     <div className={styles.imageStack}>
       {images.map((img, idx) => {
@@ -32,7 +24,7 @@ function ImageStack({
               width={details.width ?? 1200}
               height={details.height ?? 900}
               className={styles.sectionImage}
-              sizes={sizes}
+              sizes="(max-width: 800px) 100vw, 50vw"
             />
           </div>
         );
@@ -100,10 +92,6 @@ export default function CustomPage({ content, preview }) {
               imageLeft ? styles.reverse : ""
             }`;
 
-        const imageSizes = isStacked
-          ? "(max-width: 1080px) 100vw, 1080px"
-          : "(max-width: 800px) 100vw, 50vw";
-
         /* ── Break / chapter divider ── */
         if (isBreak) {
           const breakText = (
@@ -135,12 +123,8 @@ export default function CustomPage({ content, preview }) {
                   >
                     {breakText}
                   </div>
-                  <div className={styles.imageBlock}>
-                    <ImageStack
-                      images={images}
-                      alt={section.sectionHeader}
-                      sizes={imageSizes}
-                    />
+                  <div className={`${styles.imageBlock} ${alignClass}`}>
+                    <ImageStack images={images} alt={section.sectionHeader} />
                   </div>
                 </div>
               </div>
@@ -219,12 +203,12 @@ export default function CustomPage({ content, preview }) {
 
               {/* ── Image block ── */}
               {hasImage && (
-                <div className={isHero ? styles.heroImageBlock : styles.imageBlock}>
-                  <ImageStack
-                    images={images}
-                    alt={section.sectionHeader}
-                    sizes={imageSizes}
-                  />
+                <div
+                  className={`${
+                    isHero ? styles.heroImageBlock : styles.imageBlock
+                  } ${alignClass}`}
+                >
+                  <ImageStack images={images} alt={section.sectionHeader} />
                 </div>
               )}
             </div>

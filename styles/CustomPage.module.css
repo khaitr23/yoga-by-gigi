@@ -299,9 +299,25 @@
   margin-left: auto;
 }
 
+/* Match the width an image gets in a side-by-side section — one column of the
+   two-column grid — so a stacked image doesn't read as a full-bleed banner.
+   .regularSection is `1fr 1fr` with a 4rem gap, so a column is exactly this. */
 .stackedSection .imageBlock,
 .stackedSection .heroImageBlock {
   width: 100%;
+  max-width: calc((100% - 4rem) / 2);
+}
+
+/* Placed by the section's alignment, the same way the text block is */
+.stackedSection .imageBlock.alignCenter,
+.stackedSection .heroImageBlock.alignCenter {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.stackedSection .imageBlock.alignRight,
+.stackedSection .heroImageBlock.alignRight {
+  margin-left: auto;
 }
 
 .stackedSection .imageFrame::after {
@@ -462,6 +478,12 @@
   .regularSection.reverse .imageBlock { order: unset; }
 
   .stackedSection { gap: 2rem; }
+
+  /* Single column on mobile — images fill the width here too */
+  .stackedSection .imageBlock,
+  .stackedSection .heroImageBlock {
+    max-width: none;
+  }
 
   .heroImageBlock .imageFrame::after,
   .regularSection .imageFrame::after,
