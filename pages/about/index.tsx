@@ -35,6 +35,8 @@ export async function getStaticProps({ preview = false }) {
       null,
     sectionImage:
       section?.fields?.sectionImage || section?.sectionImage || null,
+    additionalImages:
+      section?.fields?.additionalImages || section?.additionalImages || [],
     sectionType: section?.fields?.sectionType || section?.sectionType || null,
     ctaButtonText:
       section?.fields?.ctaButtonText || section?.ctaButtonText || null,

@@ -60,6 +60,49 @@ export async function deleteEntry(entryId: string) {
   return c.entry.delete({ ...spaceEnv(), entryId });
 }
 
+// ── Content type helpers ─────────────────────────────────────────
+
+// Cached per Node process so we don't hit the CMA on every request once the field exists.
+let sectionSchemaEnsured = false;
+
+/**
+ * Ensures the section content type has an `additionalImages` field (Array<Link<Asset>>).
+ * Idempotent — safe to call on every request; it's a no-op after the first success.
+ */
+export async function ensureAdditionalImagesField(contentTypeId: string) {
+  if (sectionSchemaEnsured) return;
+  const c = getClient();
+  try {
+    const ct = await c.contentType.get({ ...spaceEnv(), contentTypeId });
+    if (ct.fields.some((f: any) => f.id === "additionalImages")) {
+      sectionSchemaEnsured = true;
+      return;
+    }
+    const updated = await c.contentType.update(
+      { ...spaceEnv(), contentTypeId },
+      {
+        ...ct,
+        fields: [
+          ...ct.fields,
+          {
+            id: "additionalImages",
+            name: "Additional Images",
+            type: "Array",
+            required: false,
+            localized: false,
+            items: { type: "Link", linkType: "Asset", validations: [] },
+          },
+        ],
+      }
+    );
+    await c.contentType.publish({ ...spaceEnv(), contentTypeId }, updated);
+    sectionSchemaEnsured = true;
+    console.log("[ensureAdditionalImagesField] added additionalImages to", contentTypeId);
+  } catch (err) {
+    console.error("[ensureAdditionalImagesField] failed:", err);
+  }
+}
+
 // ── Asset helpers ────────────────────────────────────────────────
 
 /** Fetch the CDN URL for a published asset, or null if not found. */

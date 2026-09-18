@@ -7,6 +7,7 @@ import {
   createEntry,
   publishEntry,
   updateAndPublishEntry,
+  ensureAdditionalImagesField,
 } from "../../../../lib/contentful/management";
 
 export const maxDuration = 60;
@@ -30,11 +31,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       const sectionRefs: any[] = (page.fields.sections as any)?.["en-US"] ?? [];
 
+      // Make sure the `additionalImages` field exists on the section content type before we read/write it.
+      if (sectionRefs.length) {
+        const first = await getEntry(sectionRefs[0].sys.id);
+        await ensureAdditionalImagesField(first.sys.contentType.sys.id);
+      }
+
       const sections = await Promise.all(
         sectionRefs.map(async (ref: any) => {
           const entry = await getEntry(ref.sys.id);
           const coverImageId = (entry.fields.sectionImage as any)?.["en-US"]?.sys?.id ?? null;
           const coverImageUrl = coverImageId ? await getAssetUrl(coverImageId) : null;
+
+          const additionalRefs: any[] = (entry.fields.additionalImages as any)?.["en-US"] ?? [];
+          const additionalImages = await Promise.all(
+            additionalRefs.map(async (r: any) => {
+              const id = r.sys.id;
+              const url = await getAssetUrl(id);
+              return { id, url };
+            })
+          );
+
           return {
             id: entry.sys.id,
             sectionHeader: (entry.fields.sectionHeader as any)?.["en-US"] ?? "",
@@ -45,6 +62,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             isTextAboveImage: (entry.fields.isTextAboveImage as any)?.["en-US"] ?? true,
             coverImageId,
             coverImageUrl,
+            additionalImages: additionalImages.filter((a) => a.url),
             published: !!entry.sys.publishedAt && !(entry.sys as any).archivedAt,
           };
         })

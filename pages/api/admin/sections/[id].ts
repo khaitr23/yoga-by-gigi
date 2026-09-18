@@ -30,7 +30,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     if (req.method === "PUT") {
       const existing = await getEntry(id);
-      const { sectionHeader, sectionDescription, ctaButtonText, ctaButtonLink, assetId } = req.body;
+      const {
+        sectionHeader,
+        sectionDescription,
+        ctaButtonText,
+        ctaButtonLink,
+        assetId,
+        additionalImageIds,
+      } = req.body;
 
       const fields: any = {
         ...existing.fields,
@@ -42,8 +49,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (assetId) {
         fields.sectionImage = { "en-US": { sys: { type: "Link", linkType: "Asset", id: assetId } } };
       }
+      if (Array.isArray(additionalImageIds)) {
+        fields.additionalImages = {
+          "en-US": additionalImageIds.map((aid: string) => ({
+            sys: { type: "Link", linkType: "Asset", id: aid },
+          })),
+        };
+      }
 
-      console.log("[sections/id] updating", id, "assetId:", assetId);
+      console.log("[sections/id] updating", id, "assetId:", assetId, "extras:", additionalImageIds?.length);
       await updateAndPublishEntry(id, fields, existing);
       await revalidateAll(res);
       return res.status(200).json({ ok: true });

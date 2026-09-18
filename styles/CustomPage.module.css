@@ -222,15 +222,23 @@
 .imageFrame {
   position: relative;
   overflow: hidden;
-  aspect-ratio: 4 / 3;
 }
 
 .sectionImage {
   width: 100% !important;
-  height: 100% !important;
-  object-fit: cover;
+  height: auto !important;
   display: block;
   transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.imageStack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.imageStack .imageFrame {
+  overflow: hidden;
 }
 
 .sectionWrapper:hover .sectionImage { transform: scale(1.04); }

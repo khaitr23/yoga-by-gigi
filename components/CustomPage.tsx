@@ -110,16 +110,33 @@ export default function CustomPage({ content, preview }) {
               {/* ── Image block ── */}
               {hasImage && (
                 <div className={isHero ? styles.heroImageBlock : styles.imageBlock}>
-                  <div className={styles.imageFrame}>
-                    <ContentfulImage
-                      src={section.sectionImage.fields.file.url}
-                      alt={section.sectionHeader}
-                      fill
-                      className={styles.sectionImage}
-                      sizes="(max-width: 800px) 100vw, 50vw"
-                      style={{ objectFit: "cover" }}
-                    />
-                  </div>
+                  {(() => {
+                    const images: any[] = [
+                      section.sectionImage,
+                      ...((section.additionalImages as any[]) ?? []),
+                    ].filter((img: any) => img?.fields?.file);
+                    return (
+                      <div className={styles.imageStack}>
+                        {images.map((img, idx) => {
+                          const details = img.fields.file.details?.image ?? {};
+                          const w = details.width ?? 1200;
+                          const h = details.height ?? 900;
+                          return (
+                            <div key={img.sys?.id ?? idx} className={styles.imageFrame}>
+                              <ContentfulImage
+                                src={img.fields.file.url}
+                                alt={section.sectionHeader}
+                                width={w}
+                                height={h}
+                                className={styles.sectionImage}
+                                sizes="(max-width: 800px) 100vw, 50vw"
+                              />
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
             </div>

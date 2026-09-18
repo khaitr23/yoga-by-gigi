@@ -11,6 +11,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return { props: {} };
 };
 
+interface ExtraImage { id: string; url: string }
+
 interface Section {
   id: string;
   sectionType: string;
@@ -21,6 +23,7 @@ interface Section {
   isTextAboveImage: boolean;
   coverImageId: string | null;
   coverImageUrl: string | null;
+  additionalImages: ExtraImage[];
   published: boolean;
 }
 
@@ -36,6 +39,7 @@ interface SectionState extends Section {
   _ctaLink: string;
   _assetId: string;
   _assetUrl: string;
+  _extras: ExtraImage[];
 }
 
 const SECTION_TYPE_OPTIONS = [
@@ -57,6 +61,7 @@ export default function AdminSectionsPage() {
   function toState(s: Section): SectionState {
     return {
       ...s,
+      additionalImages: s.additionalImages ?? [],
       open: false,
       saving: false,
       saved: false,
@@ -68,6 +73,7 @@ export default function AdminSectionsPage() {
       _ctaLink: s.ctaButtonLink,
       _assetId: "",
       _assetUrl: "",
+      _extras: s.additionalImages ?? [],
     };
   }
 
@@ -189,6 +195,7 @@ export default function AdminSectionsPage() {
           ctaButtonText: section._ctaText,
           ctaButtonLink: section._ctaLink,
           assetId: section._assetId || undefined,
+          additionalImageIds: section._extras.map((e) => e.id),
         }),
       });
       const data = await res.json();
@@ -202,6 +209,7 @@ export default function AdminSectionsPage() {
         ctaButtonLink: section._ctaLink,
         // If a new asset was uploaded, update the preview URL
         coverImageUrl: section._assetUrl || section.coverImageUrl,
+        additionalImages: section._extras,
       });
       setGlobalAlert({ type: "success", msg: `"${section._header || section.sectionType}" saved and published.` });
       setTimeout(() => setGlobalAlert(null), 3500);
@@ -378,6 +386,70 @@ export default function AdminSectionsPage() {
                     }
                   />
                   <span className={styles.hint}>click the preview to replace the image</span>
+                </div>
+
+                {/* Additional images */}
+                <div className={styles.fieldGroup}>
+                  <label className={styles.label}>additional images</label>
+                  {section._extras.length > 0 && (
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
+                        gap: "0.75rem",
+                        marginBottom: "0.75rem",
+                      }}
+                    >
+                      {section._extras.map((img, idx) => (
+                        <div
+                          key={img.id}
+                          style={{ position: "relative", aspectRatio: "4 / 3", overflow: "hidden", background: "rgba(115,64,35,0.05)", border: "1px solid rgba(115,64,35,0.15)" }}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={`${img.url}?fm=jpg&fl=progressive&w=400&q=75`}
+                            alt=""
+                            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                          />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              update(section.id, {
+                                _extras: section._extras.filter((_, i) => i !== idx),
+                              })
+                            }
+                            title="remove"
+                            aria-label="remove"
+                            style={{
+                              position: "absolute",
+                              top: 4,
+                              right: 4,
+                              background: "rgba(255,255,255,0.92)",
+                              border: "1px solid rgba(115,64,35,0.35)",
+                              color: "#a33",
+                              width: 24,
+                              height: 24,
+                              borderRadius: "50%",
+                              cursor: "pointer",
+                              fontSize: "14px",
+                              lineHeight: 1,
+                            }}
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <ImageUpload
+                    currentUrl={null}
+                    onUploaded={(id, url) =>
+                      update(section.id, {
+                        _extras: [...section._extras, { id, url }],
+                      })
+                    }
+                  />
+                  <span className={styles.hint}>upload additional images to stack below the cover on the site</span>
                 </div>
 
                 {/* Header */}
