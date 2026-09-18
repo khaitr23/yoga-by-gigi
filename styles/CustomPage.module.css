@@ -417,6 +417,17 @@
    Text alignment — left (default) / center / right
    ───────────────────────────────────────────── */
 .alignLeft   { text-align: left;   align-items: flex-start; }
+
+/* Left-aligned body copy is justified so each paragraph reads as a clean
+   rectangle — flush on both edges. Hyphenation keeps the word spacing even;
+   without it, Courier Prime in a ~34-character column opens visible rivers.
+   The last line of each paragraph stays ragged, as justified text should. */
+.alignLeft .sectionDescription,
+.alignLeft .breakDescription {
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
 .alignCenter { text-align: center; align-items: center; }
 .alignRight  { text-align: right;  align-items: flex-end; }
 
