@@ -7,7 +7,7 @@ import {
   createEntry,
   publishEntry,
   updateAndPublishEntry,
-  ensureAdditionalImagesField,
+  ensureSectionFields,
 } from "../../../../lib/contentful/management";
 
 export const maxDuration = 60;
@@ -31,10 +31,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       const sectionRefs: any[] = (page.fields.sections as any)?.["en-US"] ?? [];
 
-      // Make sure the `additionalImages` field exists on the section content type before we read/write it.
+      // Make sure our extra fields exist on the section content type before we read/write them.
       if (sectionRefs.length) {
         const first = await getEntry(sectionRefs[0].sys.id);
-        await ensureAdditionalImagesField(first.sys.contentType.sys.id);
+        await ensureSectionFields(first.sys.contentType.sys.id);
       }
 
       const sections = await Promise.all(
@@ -60,6 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             ctaButtonText: (entry.fields.ctaButtonText as any)?.["en-US"] ?? "",
             ctaButtonLink: (entry.fields.ctaButtonLink as any)?.["en-US"] ?? "",
             isTextAboveImage: (entry.fields.isTextAboveImage as any)?.["en-US"] ?? true,
+            imagePosition: (entry.fields.imagePosition as any)?.["en-US"] ?? "auto",
             coverImageId,
             coverImageUrl,
             additionalImages: additionalImages.filter((a) => a.url),

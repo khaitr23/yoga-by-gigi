@@ -21,6 +21,7 @@ interface Section {
   ctaButtonText: string;
   ctaButtonLink: string;
   isTextAboveImage: boolean;
+  imagePosition: string;
   coverImageId: string | null;
   coverImageUrl: string | null;
   additionalImages: ExtraImage[];
@@ -40,7 +41,16 @@ interface SectionState extends Section {
   _assetId: string;
   _assetUrl: string;
   _extras: ExtraImage[];
+  _imagePosition: string;
 }
+
+const IMAGE_POSITION_OPTIONS = [
+  { value: "auto", label: "auto — alternate left / right" },
+  { value: "left", label: "left of the text" },
+  { value: "right", label: "right of the text" },
+  { value: "above", label: "above the text" },
+  { value: "below", label: "below the text" },
+];
 
 const SECTION_TYPE_OPTIONS = [
   { value: "large-title-content-section", label: "Large title (hero-style)" },
@@ -74,6 +84,7 @@ export default function AdminSectionsPage() {
       _assetId: "",
       _assetUrl: "",
       _extras: s.additionalImages ?? [],
+      _imagePosition: s.imagePosition || "auto",
     };
   }
 
@@ -196,6 +207,7 @@ export default function AdminSectionsPage() {
           ctaButtonLink: section._ctaLink,
           assetId: section._assetId || undefined,
           additionalImageIds: section._extras.map((e) => e.id),
+          imagePosition: section._imagePosition,
         }),
       });
       const data = await res.json();
@@ -210,6 +222,7 @@ export default function AdminSectionsPage() {
         // If a new asset was uploaded, update the preview URL
         coverImageUrl: section._assetUrl || section.coverImageUrl,
         additionalImages: section._extras,
+        imagePosition: section._imagePosition,
       });
       setGlobalAlert({ type: "success", msg: `"${section._header || section.sectionType}" saved and published.` });
       setTimeout(() => setGlobalAlert(null), 3500);
@@ -386,6 +399,27 @@ export default function AdminSectionsPage() {
                     }
                   />
                   <span className={styles.hint}>click the preview to replace the image</span>
+                </div>
+
+                {/* Image position */}
+                <div className={styles.fieldGroup}>
+                  <label className={styles.label} htmlFor={`imgpos-${section.id}`}>
+                    image position
+                  </label>
+                  <select
+                    id={`imgpos-${section.id}`}
+                    className={styles.select}
+                    value={section._imagePosition}
+                    onChange={(e) => update(section.id, { _imagePosition: e.target.value })}
+                  >
+                    {IMAGE_POSITION_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                  <span className={styles.hint}>
+                    where the image sits next to the text · auto keeps the left/right
+                    rhythm with the sections around it
+                  </span>
                 </div>
 
                 {/* Additional images */}

@@ -6,6 +6,8 @@ import {
   updateAndPublishEntry,
   unpublishEntry,
   deleteEntry,
+  ensureSectionFields,
+  IMAGE_POSITIONS,
 } from "../../../../lib/contentful/management";
 
 export const maxDuration = 60;
@@ -37,6 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         ctaButtonLink,
         assetId,
         additionalImageIds,
+        imagePosition,
       } = req.body;
 
       const fields: any = {
@@ -49,6 +52,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (assetId) {
         fields.sectionImage = { "en-US": { sys: { type: "Link", linkType: "Asset", id: assetId } } };
       }
+      if (imagePosition !== undefined) {
+        if (!IMAGE_POSITIONS.includes(imagePosition)) {
+          return res.status(400).json({
+            error: `imagePosition must be one of: ${IMAGE_POSITIONS.join(", ")}`,
+          });
+        }
+        // The field is added on demand, so make sure it exists before writing it.
+        await ensureSectionFields(existing.sys.contentType.sys.id);
+        fields.imagePosition = { "en-US": imagePosition };
+      }
       if (Array.isArray(additionalImageIds)) {
         fields.additionalImages = {
           "en-US": additionalImageIds.map((aid: string) => ({
@@ -57,7 +70,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         };
       }
 
-      console.log("[sections/id] updating", id, "assetId:", assetId, "extras:", additionalImageIds?.length);
+      console.log("[sections/id] updating", id, "assetId:", assetId, "extras:", additionalImageIds?.length, "imagePosition:", imagePosition);
       await updateAndPublishEntry(id, fields, existing);
       await revalidateAll(res);
       return res.status(200).json({ ok: true });

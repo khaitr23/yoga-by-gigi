@@ -20,6 +20,7 @@ export async function getStaticProps({ preview = false }) {
         "Please check again later, thank you for your patience! :)",
       sectionType: "break",
       isTextAboveImage: true,
+      imagePosition: "auto",
       sectionImage: null,
       ctaButtonText: null,
       ctaButtonLink: null,
@@ -44,6 +45,8 @@ export async function getStaticProps({ preview = false }) {
       section?.fields?.ctaButtonLink || section?.ctaButtonLink || null,
     isTextAboveImage:
       section?.fields?.isTextAboveImage ?? section?.isTextAboveImage ?? null, // Boolean check
+    imagePosition:
+      section?.fields?.imagePosition || section?.imagePosition || "auto",
   }));
 
   const content = {

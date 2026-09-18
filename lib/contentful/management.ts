@@ -62,44 +62,62 @@ export async function deleteEntry(entryId: string) {
 
 // ── Content type helpers ─────────────────────────────────────────
 
-// Cached per Node process so we don't hit the CMA on every request once the field exists.
+/** Where a section's image sits relative to its text. */
+export const IMAGE_POSITIONS = ["auto", "left", "right", "above", "below"];
+
+// Fields this app adds to the section content type on top of whatever Contentful started with.
+const SECTION_FIELDS = [
+  {
+    id: "additionalImages",
+    name: "Additional Images",
+    type: "Array",
+    required: false,
+    localized: false,
+    items: { type: "Link", linkType: "Asset", validations: [] },
+  },
+  {
+    id: "imagePosition",
+    name: "Image Position",
+    type: "Symbol",
+    required: false,
+    localized: false,
+    validations: [{ in: IMAGE_POSITIONS }],
+  },
+];
+
+// Cached per Node process so we don't hit the CMA on every request once the fields exist.
 let sectionSchemaEnsured = false;
 
 /**
- * Ensures the section content type has an `additionalImages` field (Array<Link<Asset>>).
+ * Ensures the section content type has every field in SECTION_FIELDS.
  * Idempotent — safe to call on every request; it's a no-op after the first success.
  */
-export async function ensureAdditionalImagesField(contentTypeId: string) {
+export async function ensureSectionFields(contentTypeId: string) {
   if (sectionSchemaEnsured) return;
   const c = getClient();
   try {
     const ct = await c.contentType.get({ ...spaceEnv(), contentTypeId });
-    if (ct.fields.some((f: any) => f.id === "additionalImages")) {
+    const missing = SECTION_FIELDS.filter(
+      (f) => !ct.fields.some((existing: any) => existing.id === f.id)
+    );
+    if (!missing.length) {
       sectionSchemaEnsured = true;
       return;
     }
     const updated = await c.contentType.update(
       { ...spaceEnv(), contentTypeId },
-      {
-        ...ct,
-        fields: [
-          ...ct.fields,
-          {
-            id: "additionalImages",
-            name: "Additional Images",
-            type: "Array",
-            required: false,
-            localized: false,
-            items: { type: "Link", linkType: "Asset", validations: [] },
-          },
-        ],
-      }
+      { ...ct, fields: [...ct.fields, ...missing] }
     );
     await c.contentType.publish({ ...spaceEnv(), contentTypeId }, updated);
     sectionSchemaEnsured = true;
-    console.log("[ensureAdditionalImagesField] added additionalImages to", contentTypeId);
+    console.log(
+      "[ensureSectionFields] added",
+      missing.map((f) => f.id).join(", "),
+      "to",
+      contentTypeId
+    );
   } catch (err) {
-    console.error("[ensureAdditionalImagesField] failed:", err);
+    console.error("[ensureSectionFields] failed:", err);
   }
 }
 
