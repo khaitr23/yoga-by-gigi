@@ -26,10 +26,42 @@
   align-items: center;
 }
 
-/* ── Logo ── */
-.logo {
-  width: 50px;
-  display: block;
+/* ── Wordmark (the logo) ── */
+.wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  max-width: 100%;
+  min-width: 0;
+  font-family: var(--ff);
+  font-style: italic;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  color: var(--colorsecondary);
+  text-decoration: none;
+  transition: opacity var(--transition);
+}
+
+.wordmark:hover {
+  opacity: 0.68;
+}
+
+/* Truncates rather than pushing the nav sideways on a small screen */
+.wordmarkName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wordmarkDot {
+  color: var(--coloraccent);
+  font-style: normal;
+  flex: none;
+}
+
+/* Stays visible even when a long site name truncates */
+.wordmarkSuffix {
+  flex: none;
 }
 
 /* Explicitly pin each item to its column so hiding the nav
@@ -183,6 +215,15 @@
   margin-bottom: 1.25rem;
 }
 
+.sidebarBrandSuffix {
+  font-family: var(--ff);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--colorsecondary, #734023);
+  opacity: 0.7;
+  letter-spacing: 0.04em;
+}
+
 .sidebarBrandName {
   font-family: var(--ff);
   font-size: 1rem;
@@ -286,6 +327,11 @@
 
 /* ── Mobile breakpoint ── */
 @media (max-width: 800px) {
+  .wordmark {
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+  }
+
   .navMenu {
     display: none;
   }

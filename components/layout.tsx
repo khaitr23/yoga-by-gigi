@@ -22,7 +22,7 @@ export default function Layout({
         <title>{siteName}</title>
         <link rel="icon" href={favicon} />
       </Head>
-      <Header siteName={siteName} logoUrl={logoUrl} navLabels={navLabels} />
+      <Header siteName={siteName} navLabels={navLabels} />
       {children}
       <Footer siteName={siteName} />
     </>

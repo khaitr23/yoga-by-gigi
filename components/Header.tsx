@@ -1,9 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import logoPic from "../public/images/logo.png";
-import Image from "next/image";
-import ContentfulImage from "./ui/ContentfulImage";
 import styles from "../styles/Header.module.css";
 import {
   DEFAULT_SITE_NAME,
@@ -13,13 +10,11 @@ import {
 
 interface Props {
   siteName?: string;
-  logoUrl?: string | null;
   navLabels?: NavLabels;
 }
 
 export default function Header({
   siteName = DEFAULT_SITE_NAME,
-  logoUrl = null,
   navLabels,
 }: Props) {
   const navItems = resolveNavItems(navLabels);
@@ -40,29 +35,12 @@ export default function Header({
           sidebar and overlay must live OUTSIDE it to cover the full page */}
       <div className={styles.headerWrapper}>
         <header className={styles.headerSection}>
-          <Link href="/" onClick={close} aria-label={siteName}>
-            {logoUrl ? (
-              // preserveTransparency keeps a logo's alpha channel intact
-              <ContentfulImage
-                src={logoUrl}
-                alt=""
-                className={styles.logo}
-                width={100}
-                height={100}
-                preserveTransparency
-                priority
-                style={{ width: "100%", height: "100%", objectFit: "contain" }}
-              />
-            ) : (
-              <Image
-                src={logoPic}
-                alt=""
-                className={styles.logo}
-                width={0}
-                height={0}
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
-            )}
+          {/* Text wordmark rather than a picture — it tracks the site name.
+              No aria-label: the visible text is the link's accessible name. */}
+          <Link href="/" onClick={close} className={styles.wordmark}>
+            <span className={styles.wordmarkName}>{siteName}</span>
+            <span className={styles.wordmarkDot}>.</span>
+            <span className={styles.wordmarkSuffix}>{"\u00A0studio"}</span>
           </Link>
 
           {/* ── Desktop nav ── */}
@@ -103,6 +81,7 @@ export default function Header({
         <div className={styles.sidebarBrand}>
           <span className={styles.sidebarBrandName}>{siteName}</span>
           <span className={styles.sidebarBrandDot}>.</span>
+          <span className={styles.sidebarBrandSuffix}>{"\u00A0studio"}</span>
         </div>
         <span className={styles.sidebarRule} />
 

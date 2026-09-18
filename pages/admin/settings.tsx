@@ -95,15 +95,17 @@ export default function AdminSettingsPage() {
             <form className={styles.form} onSubmit={handleSave}>
               {/* Logo */}
               <div className={styles.fieldGroup}>
-                <label className={styles.label}>logo</label>
+                <label className={styles.label}>browser tab icon</label>
                 <ImageUpload
                   currentUrl={newLogoUrl || logoUrl}
                   preserveTransparency
                   onUploaded={(id, url) => { setNewLogoId(id); setNewLogoUrl(url); }}
                 />
                 <span className={styles.hint}>
-                  click the preview to upload a new logo · appears in the header and as the
-                  browser tab icon · a square PNG with a transparent background works best
+                  click the preview to upload a new icon · this is the small picture
+                  on the browser tab · the header itself shows the website name as
+                  text, not a picture · a square PNG with a transparent background
+                  works best
                 </span>
               </div>
 
