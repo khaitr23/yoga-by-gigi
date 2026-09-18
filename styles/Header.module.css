@@ -84,10 +84,12 @@
 .navMenu {
   display: flex;
   align-items: center;
-  /* Was 60px — 240px of pure whitespace that squeezed the wordmark out. Fixed
-     rather than viewport-scaled: the header caps at 1080px, so a vw-based gap
-     would keep growing after the row has stopped. */
-  gap: 24px;
+  /* Cut to 24px when the row still had a mirrored third column and was tight.
+     The two-column header left ~167px spare either side of the nav, so this
+     scales back up with the viewport. The ceiling matters because the header
+     caps at 1080px — without it the gap would keep growing after the row has
+     stopped, re-crowding the wordmark on a wide screen. */
+  gap: clamp(26px, 2.8vw, 48px);
   list-style: none;
   margin: 0;
   padding: 0;
