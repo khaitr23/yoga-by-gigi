@@ -49,7 +49,9 @@ export default function CustomPage({ content, preview }) {
           section.sectionType === "large-title-content-section" && index === 0;
         const isMedium =
           section.sectionType === "medium-title-content-section";
-        const hasImage = !!section.sectionImage;
+        // Only render the image column if the primary image actually has a URL —
+        // an unpublished / unresolved asset comes back as a link ref without .fields.
+        const hasImage = !!section.sectionImage?.fields?.file?.url;
 
         const innerClass = isHero
           ? styles.heroSection
